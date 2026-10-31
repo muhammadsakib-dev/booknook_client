@@ -9,17 +9,14 @@ import { useState } from "react";
 interface NavItem {
   label: string;
   href: string;
-  isSpecial?: boolean;
 }
 
 const navItems: NavItem[] = [
   { label: "Home", href: "/" },
-  { label: "Books", href: "/books" },
-  { label: "Magazines", href: "/magazines" },
-  { label: "Textbooks", href: "/textbooks" },
-  { label: "Recomended", href: "/recommended" },
-  { label: "Sale", href: "/sale", isSpecial: true },
-  { label: "Pages", href: "/pages" },
+  { label: "Browse Books", href: "/books" },
+  { label: "Add Book", href: "/add-book" },
+  { label: "My Books", href: "/my-books" },
+  { label: "My Borrows", href: "/my-borrows" },
 ];
 
 interface NavbarProps {
@@ -56,8 +53,7 @@ export function Navbar({ className }: NavbarProps) {
                       "text-sm font-medium transition-colors hover:text-primary relative py-3 block",
                       isActive
                         ? "text-primary font-semibold"
-                        : "text-foreground/90",
-                      item.isSpecial && "hover:text-primary",
+                        : "text-foreground/90"
                     )}
                   >
                     {item.label}
