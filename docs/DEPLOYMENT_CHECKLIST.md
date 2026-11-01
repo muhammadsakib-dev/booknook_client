@@ -161,3 +161,4 @@ Perform these operational tests on the live production URL:
    - Click "Return Book"; confirm modal.
    - Verify status transitions to "Returned" and book's `availableCopies` increments on the catalog.
    - Verify contributor cannot delete a book with active reader loans.
+
