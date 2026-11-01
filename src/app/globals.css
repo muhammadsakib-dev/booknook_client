@@ -6,9 +6,9 @@
 
 @theme inline {
   /* ==========================================================================
-     TAILWIND THEME TOKEN MAPPINGS
-     এই ভেরিয়েবলগুলো টেলউইন্ড ইউটিলিটি ক্লাসে রূপান্তর করে।
-     যেমন: bg-primary, text-primary, bg-success, border-border ইত্যাদি
+     TAILWIND THEME TOKEN MAPPINGS — BOOKNOOK PALETTE
+     Deep Forest Green: #243C35 | Warm Ivory: #F5F0E7 | Muted Gold: #C18A55
+     Charcoal: #30332E | Sage Green: #D9E0D7 | Soft Beige: #E8DFD1
      ========================================================================== */
 
   /* Base & Surfaces */
@@ -23,19 +23,19 @@
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
 
-  /* Brand / Primary (Dark Green Theme) */
+  /* Brand / Primary (Deep Forest Green) */
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary-hover: var(--primary-hover);
   --color-primary-active: var(--primary-active);
   --color-primary-subtle: var(--primary-subtle);
 
-  /* Secondary */
+  /* Secondary (Soft Beige / Sage) */
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary-hover: var(--secondary-hover);
 
-  /* Accent */
+  /* Accent (Muted Gold) */
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent-hover: var(--accent-hover);
@@ -106,228 +106,179 @@
 
 :root {
   /* ==========================================================================
-     LIGHT MODE COLOR SYSTEM (লাইট মোড কালার প্যালেট)
-     এখানে যেকোনো কালার কোড (Hex, OKLCH, বা HSL) বসিয়ে নিজের মতো পরিবর্তন করতে পারেন।
+     LIGHT MODE — BOOKNOOK BRAND PALETTE
+     Primary: Deep Forest Green (#243C35)
+     Background: Warm Ivory Tint (#FAF8F5 / #F5F0E7)
+     Accent: Muted Gold (#C18A55)
+     Text: Charcoal (#30332E)
      ========================================================================== */
 
-  /* --------------------------------------------------------------------------
-     ১. BRAND / PRIMARY PALETTE (মূল ব্র্যান্ড কালার - Dark Green)
-     -------------------------------------------------------------------------- */
-  --primary: oklch(
-    0.35 0.12 155
-  ); /* মূল ডার্ক গ্রিন কালার (প্রায় #14532d / ফরেস্ট গ্রিন) */
-  --primary-foreground: oklch(
-    0.985 0.01 155
-  ); /* প্রাইমারি ব্যাকগ্রাউন্ডের ওপর টেক্সট (সাদা/হালকা পুদিনা) */
-  --primary-hover: oklch(0.3 0.11 155); /* হোভার স্টেট (একটু গাঢ় গ্রিন) */
-  --primary-active: oklch(0.24 0.1 155); /* ক্লিক/অ্যাক্টিভ স্টেট */
-  --primary-subtle: oklch(
-    0.96 0.03 155
-  ); /* হালকা গ্রিন টিন্ট (ব্যাজ, নোটিফিকেশন বা কার্ডে ব্যবহারের জন্য) */
+  /* 1. BRAND / PRIMARY PALETTE (#243C35) */
+  --primary: #243c35;
+  --primary-foreground: #f5f0e7;
+  --primary-hover: #1b2e29;
+  --primary-active: #152420;
+  --primary-subtle: #d9e0d7;
 
-  /* --------------------------------------------------------------------------
-     ২. SECONDARY PALETTE (সেকেন্ডারি কালার - সফট সেজ গ্রিন)
-     -------------------------------------------------------------------------- */
-  --secondary: oklch(0.94 0.02 155); /* সফট সেজ গ্রিন গ্রে ব্যাকগ্রাউন্ড */
-  --secondary-foreground: oklch(0.24 0.08 155); /* সেকেন্ডারি টেক্সট কালার */
-  --secondary-hover: oklch(0.89 0.03 155); /* সেকেন্ডারি হোভার স্টেট */
+  /* 2. SECONDARY PALETTE (#E8DFD1 / Soft Sage-Beige) */
+  --secondary: #e8dfd1;
+  --secondary-foreground: #30332e;
+  --secondary-hover: #ddd3c3;
 
-  /* --------------------------------------------------------------------------
-     ৩. ACCENT PALETTE (অ্যাকসেন্ট ও হাইলাইট কালার)
-     -------------------------------------------------------------------------- */
-  --accent: oklch(0.93 0.03 155); /* ইন্টারেক্টিভ ও হাইলাইট ব্যাকগ্রাউন্ড */
-  --accent-foreground: oklch(0.22 0.08 155); /* অ্যাকসেন্ট টেক্সট কালার */
-  --accent-hover: oklch(0.88 0.04 155); /* অ্যাকসেন্ট হোভার স্টেট */
+  /* 3. ACCENT PALETTE (#C18A55 / Muted Gold) */
+  --accent: #c18a55;
+  --accent-foreground: #ffffff;
+  --accent-hover: #ad7948;
 
-  /* --------------------------------------------------------------------------
-     ৪. BASE & SURFACES (পেজ ব্যাকগ্রাউন্ড ও কন্টেইনার)
-     -------------------------------------------------------------------------- */
-  --background: oklch(
-    0.99 0.005 155
-  ); /* মূল ওয়েবপেজের ব্যাকগ্রাউন্ড (ক্লিন অফ-হোয়াইট) */
-  --foreground: oklch(0.18 0.02 155); /* মূল লেখার কালার (ডিপ ডার্ক কাঠকয়লা-সবুজ) */
-  --surface: oklch(1 0 0); /* খাঁটি সাদা কনটেন্ট বক্স সারফেস */
-  --surface-subtle: oklch(0.97 0.01 155); /* হালকা সেকশন ব্যাকগ্রাউন্ড */
+  /* 4. BASE & SURFACES (#FAF8F5 / Warm Ivory) */
+  --background: #faf8f5;
+  --foreground: #30332e;
+  --surface: #ffffff;
+  --surface-subtle: #f4efe7;
 
-  /* --------------------------------------------------------------------------
-     ৫. CARD & POPOVER (কার্ড, মোডাল ও ড্রপডাউন)
-     -------------------------------------------------------------------------- */
-  --card: oklch(1 0 0); /* কার্ড সারফেস */
-  --card-foreground: oklch(0.18 0.02 155); /* কার্ডের ভেতরের টেক্সট */
-  --popover: oklch(1 0 0); /* ড্রপডাউন, পপওভার, টুলটিপ */
-  --popover-foreground: oklch(0.18 0.02 155); /* ড্রপডাউন টেক্সট */
+  /* 5. CARD & POPOVER */
+  --card: #ffffff;
+  --card-foreground: #30332e;
+  --popover: #ffffff;
+  --popover-foreground: #30332e;
 
-  /* --------------------------------------------------------------------------
-     ৬. MUTED & SUBTLE (অনুজ্জ্বল টেক্সট ও ডিসেবলড স্টেট)
-     -------------------------------------------------------------------------- */
-  --muted: oklch(0.95 0.01 155); /* ডিসেবলড বা অনুজ্জ্বল ব্যাকগ্রাউন্ড */
-  --muted-foreground: oklch(
-    0.52 0.02 155
-  ); /* ক্যাপশন, প্লেসহোল্ডার ও সেকেন্ডারি টেক্সট */
+  /* 6. MUTED & SUBTLE */
+  --muted: #eeeae3;
+  --muted-foreground: #666c64;
 
-  /* --------------------------------------------------------------------------
-     ৭. BORDERS, DIVIDERS & FORM INPUTS (বর্ডার এবং ইনপুট ফিল্ড)
-     -------------------------------------------------------------------------- */
-  --border: oklch(0.89 0.01 155); /* সাধারণ বর্ডার বা ডিভাইডার */
-  --border-subtle: oklch(0.94 0.01 155); /* অতি সূক্ষ্ম বর্ডার */
-  --border-strong: oklch(0.72 0.02 155); /* স্পষ্ট বা হাইলাইট করা বর্ডার */
-  --input: oklch(0.89 0.01 155); /* ইনপুট ফিল্ডের বর্ডার */
-  --ring: oklch(0.4 0.1 155); /* ফোকাস রিং বা আউটলাইন (ডার্ক গ্রিন ফোকাস) */
-  --radius: 0.625rem; /* বর্ডার রেডিয়াস */
+  /* 7. BORDERS & INPUTS */
+  --border: #dfd8cc;
+  --border-subtle: #ede7dc;
+  --border-strong: #c2baa9;
+  --input: #dfd8cc;
+  --ring: #243c35;
+  --radius: 0.75rem;
 
-  /* --------------------------------------------------------------------------
-     ৮. STATUS & FEEDBACK COLORS (স্ট্যাটাস ও নোটিফিকেশন কালার)
-     -------------------------------------------------------------------------- */
-  /* Success (সফলতা / ভেরিফাইড - Emerald Green) */
-  --success: oklch(0.6 0.17 145);
-  --success-foreground: oklch(0.99 0 0);
-  --success-subtle: oklch(0.96 0.04 145);
-  --success-border: oklch(0.84 0.1 145);
+  /* 8. STATUS & FEEDBACK */
+  --success: #2e7d32;
+  --success-foreground: #ffffff;
+  --success-subtle: #e8f5e9;
+  --success-border: #a5d6a7;
 
-  /* Warning (সতর্কতা / পেন্ডিং - Amber) */
-  --warning: oklch(0.75 0.16 75);
-  --warning-foreground: oklch(0.2 0.05 75);
-  --warning-subtle: oklch(0.96 0.05 75);
-  --warning-border: oklch(0.86 0.1 75);
+  --warning: #b78103;
+  --warning-foreground: #ffffff;
+  --warning-subtle: #fff8e1;
+  --warning-border: #ffe082;
 
-  /* Destructive / Error (ভুল / ডেঞ্জার - Crimson Red) */
-  --destructive: oklch(0.57 0.22 27);
-  --destructive-foreground: oklch(0.99 0 0);
-  --destructive-subtle: oklch(0.96 0.05 27);
-  --destructive-border: oklch(0.84 0.12 27);
+  --destructive: #c62828;
+  --destructive-foreground: #ffffff;
+  --destructive-subtle: #ffebee;
+  --destructive-border: #ef9a9a;
 
-  /* Info (তথ্য / আপডেট - Sky Blue) */
-  --info: oklch(0.6 0.15 240);
-  --info-foreground: oklch(0.99 0 0);
-  --info-subtle: oklch(0.95 0.04 240);
-  --info-border: oklch(0.84 0.09 240);
+  --info: #0277bd;
+  --info-foreground: #ffffff;
+  --info-subtle: #e1f5fe;
+  --info-border: #81d4fa;
 
-  /* --------------------------------------------------------------------------
-     ৯. SIDEBAR & NAVIGATION (সাইডবার মেন্যু কালার)
-     -------------------------------------------------------------------------- */
-  --sidebar: oklch(0.98 0.01 155);
-  --sidebar-foreground: oklch(0.18 0.02 155);
-  --sidebar-primary: oklch(0.35 0.12 155);
-  --sidebar-primary-foreground: oklch(0.985 0.01 155);
-  --sidebar-accent: oklch(0.93 0.02 155);
-  --sidebar-accent-foreground: oklch(0.24 0.08 155);
-  --sidebar-border: oklch(0.9 0.01 155);
-  --sidebar-ring: oklch(0.4 0.1 155);
+  /* 9. SIDEBAR & NAVIGATION */
+  --sidebar: #f5f0e7;
+  --sidebar-foreground: #30332e;
+  --sidebar-primary: #243c35;
+  --sidebar-primary-foreground: #f5f0e7;
+  --sidebar-accent: #e8dfd1;
+  --sidebar-accent-foreground: #30332e;
+  --sidebar-border: #dfd8cc;
+  --sidebar-ring: #243c35;
 
-  /* --------------------------------------------------------------------------
-     ১০. CHARTS & DATA VISUALIZATION (গ্রাফ ও চার্ট কালার)
-     -------------------------------------------------------------------------- */
-  --chart-1: oklch(0.45 0.14 155); /* গ্রাফ ১: ফরেস্ট গ্রিন */
-  --chart-2: oklch(0.7 0.16 75); /* গ্রাফ ২: ওয়ার্ম অ্যাম্বার */
-  --chart-3: oklch(0.55 0.12 195); /* গ্রাফ ৩: ডিপ টিল */
-  --chart-4: oklch(0.65 0.16 25); /* গ্রাফ ৪: কোরাল রেড */
-  --chart-5: oklch(0.75 0.14 135); /* গ্রাফ ৫: লাইম / হালকা গ্রিন */
+  /* 10. CHARTS */
+  --chart-1: #243c35;
+  --chart-2: #c18a55;
+  --chart-3: #528574;
+  --chart-4: #a85437;
+  --chart-5: #6d8872;
 }
 
 .dark {
   /* ==========================================================================
-     DARK MODE COLOR SYSTEM (ডার্ক মোড কালার প্যালেট)
+     DARK MODE — CHARCOAL FOREST & WARM IVORY
+     Background: Charcoal (#161a18)
+     Primary: Elevated Sage-Forest Green (#4e8271)
+     Accent: Warm Gold (#D49E6A)
+     Text: Warm Ivory (#F5F0E7)
      ========================================================================== */
 
-  /* --------------------------------------------------------------------------
-     ১. BRAND / PRIMARY PALETTE
-     -------------------------------------------------------------------------- */
-  --primary: oklch(
-    0.65 0.16 155
-  ); /* ডার্ক মোডে উজ্জ্বল এমারেল্ড গ্রিন (উচ্চ কনট্রাস্টের জন্য) */
-  --primary-foreground: oklch(0.12 0.04 155); /* ডার্ক টেক্সট */
-  --primary-hover: oklch(0.7 0.17 155);
-  --primary-active: oklch(0.6 0.15 155);
-  --primary-subtle: oklch(0.22 0.05 155);
+  /* 1. BRAND / PRIMARY PALETTE */
+  --primary: #4e8271;
+  --primary-foreground: #f5f0e7;
+  --primary-hover: #5c9985;
+  --primary-active: #416d5e;
+  --primary-subtle: #1c2722;
 
-  /* --------------------------------------------------------------------------
-     ২. SECONDARY PALETTE
-     -------------------------------------------------------------------------- */
-  --secondary: oklch(0.22 0.03 155);
-  --secondary-foreground: oklch(0.95 0.01 155);
-  --secondary-hover: oklch(0.26 0.03 155);
+  /* 2. SECONDARY PALETTE */
+  --secondary: #262d29;
+  --secondary-foreground: #f5f0e7;
+  --secondary-hover: #313a35;
 
-  /* --------------------------------------------------------------------------
-     ৩. ACCENT PALETTE
-     -------------------------------------------------------------------------- */
-  --accent: oklch(0.24 0.03 155);
-  --accent-foreground: oklch(0.95 0.01 155);
-  --accent-hover: oklch(0.28 0.04 155);
+  /* 3. ACCENT PALETTE */
+  --accent: #d49e6a;
+  --accent-foreground: #1c150e;
+  --accent-hover: #deb081;
 
-  /* --------------------------------------------------------------------------
-     ৪. BASE & SURFACES
-     -------------------------------------------------------------------------- */
-  --background: oklch(0.13 0.02 155); /* ডিপ ডার্ক ব্যাকগ্রাউন্ড উইথ গ্রিন আন্ডারটোন */
-  --foreground: oklch(0.98 0.005 155); /* উজ্জ্বল পরিষ্কার টেক্সট */
-  --surface: oklch(0.17 0.02 155);
-  --surface-subtle: oklch(0.15 0.02 155);
+  /* 4. BASE & SURFACES */
+  --background: #141816;
+  --foreground: #f5f0e7;
+  --surface: #1d2220;
+  --surface-subtle: #181d1b;
 
-  /* --------------------------------------------------------------------------
-     ৫. CARD & POPOVER
-     -------------------------------------------------------------------------- */
-  --card: oklch(0.17 0.02 155);
-  --card-foreground: oklch(0.98 0.005 155);
-  --popover: oklch(0.17 0.02 155);
-  --popover-foreground: oklch(0.98 0.005 155);
+  /* 5. CARD & POPOVER */
+  --card: #1c221f;
+  --card-foreground: #f5f0e7;
+  --popover: #1c221f;
+  --popover-foreground: #f5f0e7;
 
-  /* --------------------------------------------------------------------------
-     ৬. MUTED & SUBTLE
-     -------------------------------------------------------------------------- */
-  --muted: oklch(0.22 0.02 155);
-  --muted-foreground: oklch(0.7 0.02 155);
+  /* 6. MUTED & SUBTLE */
+  --muted: #262d29;
+  --muted-foreground: #9ca69f;
 
-  /* --------------------------------------------------------------------------
-     ৭. BORDERS, DIVIDERS & FORM INPUTS
-     -------------------------------------------------------------------------- */
-  --border: oklch(1 0 0 / 12%);
-  --border-subtle: oklch(1 0 0 / 6%);
-  --border-strong: oklch(1 0 0 / 25%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.65 0.16 155);
+  /* 7. BORDERS & INPUTS */
+  --border: rgba(245, 240, 231, 0.12);
+  --border-subtle: rgba(245, 240, 231, 0.06);
+  --border-strong: rgba(245, 240, 231, 0.22);
+  --input: rgba(245, 240, 231, 0.14);
+  --ring: #4e8271;
 
-  /* --------------------------------------------------------------------------
-     ৮. STATUS & FEEDBACK COLORS
-     -------------------------------------------------------------------------- */
-  --success: oklch(0.68 0.18 145);
-  --success-foreground: oklch(0.12 0.04 145);
-  --success-subtle: oklch(0.22 0.05 145);
-  --success-border: oklch(0.4 0.1 145);
+  /* 8. STATUS & FEEDBACK */
+  --success: #4caf50;
+  --success-foreground: #0d1e10;
+  --success-subtle: #18291a;
+  --success-border: #2e5433;
 
-  --warning: oklch(0.78 0.16 75);
-  --warning-foreground: oklch(0.18 0.05 75);
-  --warning-subtle: oklch(0.24 0.05 75);
-  --warning-border: oklch(0.45 0.1 75);
+  --warning: #fbc02d;
+  --warning-foreground: #211c03;
+  --warning-subtle: #2b260e;
+  --warning-border: #574b14;
 
-  --destructive: oklch(0.68 0.2 27);
-  --destructive-foreground: oklch(0.14 0.04 27);
-  --destructive-subtle: oklch(0.24 0.05 27);
-  --destructive-border: oklch(0.45 0.12 27);
+  --destructive: #ef5350;
+  --destructive-foreground: #230807;
+  --destructive-subtle: #2d1313;
+  --destructive-border: #5e2424;
 
-  --info: oklch(0.68 0.16 240);
-  --info-foreground: oklch(0.12 0.04 240);
-  --info-subtle: oklch(0.22 0.05 240);
-  --info-border: oklch(0.4 0.1 240);
+  --info: #29b6f6;
+  --info-foreground: #051a24;
+  --info-subtle: #102633;
+  --info-border: #1c4b64;
 
-  /* --------------------------------------------------------------------------
-     ৯. SIDEBAR & NAVIGATION
-     -------------------------------------------------------------------------- */
-  --sidebar: oklch(0.15 0.02 155);
-  --sidebar-foreground: oklch(0.98 0.005 155);
-  --sidebar-primary: oklch(0.65 0.16 155);
-  --sidebar-primary-foreground: oklch(0.12 0.04 155);
-  --sidebar-accent: oklch(0.22 0.03 155);
-  --sidebar-accent-foreground: oklch(0.95 0.01 155);
-  --sidebar-border: oklch(1 0 0 / 12%);
-  --sidebar-ring: oklch(0.65 0.16 155);
+  /* 9. SIDEBAR & NAVIGATION */
+  --sidebar: #181d1b;
+  --sidebar-foreground: #f5f0e7;
+  --sidebar-primary: #4e8271;
+  --sidebar-primary-foreground: #f5f0e7;
+  --sidebar-accent: #262d29;
+  --sidebar-accent-foreground: #f5f0e7;
+  --sidebar-border: rgba(245, 240, 231, 0.12);
+  --sidebar-ring: #4e8271;
 
-  /* --------------------------------------------------------------------------
-     ১০. CHARTS & DATA VISUALIZATION
-     -------------------------------------------------------------------------- */
-  --chart-1: oklch(0.65 0.16 155);
-  --chart-2: oklch(0.78 0.16 75);
-  --chart-3: oklch(0.68 0.14 195);
-  --chart-4: oklch(0.72 0.18 25);
-  --chart-5: oklch(0.8 0.14 135);
+  /* 10. CHARTS */
+  --chart-1: #4e8271;
+  --chart-2: #d49e6a;
+  --chart-3: #5ba38e;
+  --chart-4: #e07a5f;
+  --chart-5: #81b29a;
 }
 
 @layer base {
@@ -335,9 +286,23 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground selection:bg-primary/20 selection:text-foreground;
   }
   html {
     @apply font-sans;
+  }
+}
+
+/* ==========================================================================
+   ACCESSIBILITY: RESPECT USER REDUCED MOTION PREFERENCE
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
+    scroll-behavior: auto;
   }
 }
