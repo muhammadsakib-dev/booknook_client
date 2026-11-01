@@ -50,6 +50,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (isInitialized) {
       try {
         localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+        window.dispatchEvent(new Event("booknook:cart-updated"));
       } catch (e) {
         console.error("Failed to save borrow cart to storage", e);
       }

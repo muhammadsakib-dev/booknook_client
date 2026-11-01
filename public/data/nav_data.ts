@@ -1,29 +1,12 @@
-import { BookOpen, Home, Library, PlusCircle, Repeat } from "lucide-react";
+export interface NavItem {
+  label: string;
+  href: string;
+}
 
-export const NAV_LINKS = [
-  { name: "Home", href: "/", icon: Home, shortLabel: "Home" },
-  {
-    name: "Browse Books",
-    href: "/books",
-    icon: BookOpen,
-    shortLabel: "Browse",
-  },
-  {
-    name: "Add Book",
-    href: "/books-add",
-    icon: PlusCircle,
-    shortLabel: "Add Book",
-  },
-  {
-    name: "My Books",
-    href: "/my-books",
-    icon: Library,
-    shortLabel: "My Books",
-  },
-  {
-    name: "My Borrows",
-    href: "/my-borrows",
-    icon: Repeat,
-    shortLabel: "Borrows",
-  },
-] as const;
+export const navItems: NavItem[] = [
+  { label: "Home", href: "/" },
+  { label: "Browse Books", href: "/books" },
+  { label: "Add Book", href: "/add-book" },
+  { label: "My Books", href: "/my-books" },
+  { label: "My Borrows", href: "/my-borrows" },
+];

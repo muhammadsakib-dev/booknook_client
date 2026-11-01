@@ -1,72 +1,41 @@
 "use client";
 
-import { cn } from "cn";
-import { Search } from "lucide-react";
-import { useState } from "react";
 import { CartSheet } from "@/components/header/CartSheet";
 import { Logo } from "@/components/header/Logo";
 import { MobileNavSheet } from "@/components/header/MobileNavSheet";
 import { SearchBar } from "@/components/header/SearchBar";
 import { SettingsPopover } from "@/components/header/SettingsPopover";
-import { Button } from "@/components/ui/button";
 
-interface HeaderProps {
-  className?: string;
-}
-
-export function Header({ className }: HeaderProps) {
-  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
-
+export function Header() {
   return (
-    <header
-      className={cn(
-        "w-full bg-background border-b border-border transition-colors",
-        // Sticky on mobile & tablet (< lg), static on desktop (where Navbar is sticky)
-        "sticky top-0 z-40 lg:static shadow-2xs lg:shadow-none",
-        className,
-      )}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="h-16 lg:h-20 flex items-center justify-between gap-3 sm:gap-4">
-          {/* 1. Left: Mobile Nav Sheet & Brand Logo */}
+    <header className="w-full border-b bg-background sticky top-0 z-40 lg:static">
+      <div className="max-w-7xl mx-auto max-sm:px-6 lg:px-0">
+        <div className="flex items-center max-sm:h-15 md:h-18 md:px-6 max-sm:px-0 justify-between">
+          {/* 1. Left: Mobile Navigation Drawer & Desktop Logo */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <MobileNavSheet />
+            {/* Desktop / Tablet Logo (hidden on mobile, shown on md and up) */}
+            <div className="hidden lg:block">
+              <Logo />
+            </div>
+          </div>
+
+          {/* 2. Mobile Center: Logo is perfectly centered on mobile screens (< md) */}
+          <div className="lg:hidden absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
             <Logo />
           </div>
 
-          {/* 2. Center: Search Bar (Desktop & Tablet) */}
-          <div className="hidden md:flex flex-1 max-w-sm lg:max-w-xl mx-2 sm:mx-4 lg:mx-8">
+          {/* 3. Center: Clean Search Bar (Desktop & Tablet) */}
+          <div className="hidden lg:flex flex-1 max-w-sm lg:max-w-xl mx-2 sm:mx-4 lg:mx-8">
             <SearchBar />
           </div>
 
-          {/* 3. Right: Mobile Search Toggle, Cart & Settings */}
+          {/* 4. Right: Borrow Bag (CartSheet) & Settings / Profile */}
           <div className="flex items-center gap-1.5 sm:gap-3 lg:gap-4 shrink-0">
-            {/* Mobile Search Toggle (< md) */}
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsMobileSearchOpen((prev) => !prev)}
-              className="md:hidden text-foreground hover:text-primary transition-colors cursor-pointer"
-              aria-label="Toggle search bar"
-            >
-              <Search className="w-5 h-5 stroke-[1.8]" />
-            </Button>
-
-            {/* Shopping Cart Sheet */}
             <CartSheet />
-
-            {/* Settings & Theme Popover */}
             <SettingsPopover />
           </div>
         </div>
-
-        {/* 4. Mobile Search Bar (Expandable on < md) */}
-        {isMobileSearchOpen && (
-          <div className="md:hidden pb-3 pt-1 border-t border-border animate-in fade-in slide-in-from-top-2 duration-150">
-            <SearchBar variant="compact" />
-          </div>
-        )}
       </div>
     </header>
   );

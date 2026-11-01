@@ -2,7 +2,7 @@
 
 import {
   AlertCircle,
-  BookMarked,
+  BookBookmark,
   BookOpen,
   Calendar,
   CheckCircle2,
@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -26,19 +26,99 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useCart } from "@/hooks/use-cart";
 import { useSession } from "@/lib/auth-client";
 import { checkoutBorrowBag } from "@/lib/books";
 import { cn } from "@/lib/utils";
 
+// Direct localStorage storage key (No Provider needed)
+const CART_STORAGE_KEY = "booknook-borrow-cart";
+
+export interface CartBook {
+  id: string;
+  title: string;
+  author: string;
+  image: string;
+  availableCopies: number;
+}
+
+export interface CartItem {
+  book: CartBook;
+  quantity: number;
+}
+
 export function CartSheet() {
   const { data: session } = useSession();
-  const { items, removeFromCart, updateQuantity, clearCart, totalCount } =
-    useCart();
 
+  // 1. Direct State Management (No Provider, No useCart hook)
+  const [items, setItems] = useState<CartItem[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Sync on initial mount & listen to real-time cart updates
+  useEffect(() => {
+    const loadCart = () => {
+      try {
+        const stored = localStorage.getItem(CART_STORAGE_KEY);
+        if (stored) {
+          setItems(JSON.parse(stored));
+        } else {
+          setItems([]);
+        }
+      } catch (e) {
+        console.error("Failed to read borrow bag from localStorage", e);
+      }
+    };
+
+    loadCart();
+
+    const handleUpdate = () => loadCart();
+    window.addEventListener("booknook:cart-updated", handleUpdate);
+    window.addEventListener("storage", handleUpdate);
+
+    return () => {
+      window.removeEventListener("booknook:cart-updated", handleUpdate);
+      window.removeEventListener("storage", handleUpdate);
+    };
+  }, []);
+
+  // Helper to persist updates directly into localStorage & notify UI
+  const saveCartToStorage = (newItems: CartItem[]) => {
+    setItems(newItems);
+    try {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(newItems));
+      window.dispatchEvent(new Event("booknook:cart-updated"));
+    } catch (e) {
+      console.error("Failed to save borrow bag to localStorage", e);
+    }
+  };
+
+  // Direct simple action functions
+  const removeFromCart = (bookId: string) => {
+    const updated = items.filter((item) => item.book.id !== bookId);
+    saveCartToStorage(updated);
+  };
+
+  const updateQuantity = (bookId: string, quantity: number) => {
+    if (quantity <= 0) {
+      removeFromCart(bookId);
+      return;
+    }
+    const updated = items.map((item) => {
+      if (item.book.id === bookId) {
+        const safeQty = Math.min(quantity, item.book.availableCopies);
+        return { ...item, quantity: safeQty };
+      }
+      return item;
+    });
+    saveCartToStorage(updated);
+  };
+
+  const clearCart = () => {
+    saveCartToStorage([]);
+  };
+
+  const totalCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   // Due date: exactly 14 calendar days from today
   const dueDate = new Date();
@@ -95,29 +175,37 @@ export function CartSheet() {
 
   return (
     <Sheet>
+      {/* Sheet Trigger - Start */}
       <SheetTrigger
         render={
           <Button
             variant="ghost"
             type="button"
-            className="flex items-center gap-2 text-foreground hover:text-primary transition-colors h-9 px-2.5 rounded-xl select-none cursor-pointer"
-            aria-label={`Open Borrow Bag, ${totalCount} books selected`}
+            className="flex items-center gap-2 text-foreground hover:text-primary transition-colors h-11 w-auto px-2.5 rounded-xl select-none cursor-pointer"
           >
             <div className="relative flex items-center">
-              <BookMarked className="w-5 h-5 stroke-[1.8]" />
+              <Image
+                src="/book-bookmark.png"
+                alt="Borrow Bag"
+                width={360}
+                height={360}
+                className="h-6 w-auto max-sm:h-5 max-sm:w-auto max-md:h-6 max-md:w-auto"
+              />
               <Badge
                 variant="default"
-                className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-[10px] font-bold h-4 min-w-4 px-1 rounded-full flex items-center justify-center p-0 shadow-xs"
+                className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-[10px] font-bold h-4 min-w-4 px-1 rounded-full flex items-center justify-center p-0"
               >
                 {totalCount}
               </Badge>
             </div>
-            <span className="hidden sm:inline text-sm font-semibold tracking-tight">
+            <span className="max-lg:hidden font-semibold tracking-tight">
               Borrow Bag
             </span>
           </Button>
         }
       />
+      {/* Sheet Trigger - End */}
+
       <SheetContent
         side="right"
         className="p-6 flex flex-col justify-between w-full sm:max-w-md overflow-hidden bg-card"
@@ -126,7 +214,7 @@ export function CartSheet() {
         <SheetHeader className="p-0 pb-4 border-b border-border">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <BookMarked className="w-5 h-5 text-primary" />
+              <BookBookmark className="w-5 h-5 text-primary" />
               <SheetTitle className="text-lg font-bold text-foreground">
                 Borrow Bag
               </SheetTitle>
@@ -143,7 +231,7 @@ export function CartSheet() {
         {isSuccess ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-12 px-2 animate-in zoom-in-95">
             <div className="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-4">
-              <CheckCircle2 className="w-8 h-8 stroke-[2]" />
+              <CheckCircle2 className="w-8 h-8 stroke-2" />
             </div>
             <h3 className="text-lg font-bold text-foreground mb-2">
               Borrowing Confirmed!

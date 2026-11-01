@@ -5,7 +5,8 @@ import { Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { navItems } from "@/components/Navbar";
+import { SearchBar } from "@/components/header/SearchBar";
+import { navItems } from "../../../public/data/nav_data";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -55,6 +56,11 @@ export function MobileNavSheet() {
               Book<span className="text-primary">Nook</span>
             </SheetTitle>
           </SheetHeader>
+
+          {/* Search Bar in Mobile Menu */}
+          <div className="pt-1">
+            <SearchBar onSearchSubmit={() => setOpen(false)} />
+          </div>
 
           {/* Navigation Links */}
           <div>
