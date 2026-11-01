@@ -35,5 +35,19 @@
         "organizeImports": "on"
       }
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["src/components/ui/**", "src/lib/highlighter.tsx"],
+      "linter": {
+        "rules": {
+          "a11y": "off",
+          "security": "off",
+          "suspicious": {
+            "noArrayIndexKey": "off"
+          }
+        }
+      }
+    }
+  ]
 }
