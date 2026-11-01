@@ -1,237 +1,212 @@
 "use client";
 
 import { cn } from "cn";
-import { Send } from "lucide-react";
+import { BookOpen, Check, Clock, Send, ShieldCheck } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import { Logo } from "@/components/header/Logo";
 
 interface FooterProps {
   className?: string;
 }
 
 export function Footer({ className }: FooterProps) {
+  const [email, setEmail] = useState("");
+  const [isSubscribed, setIsSubscribed] = useState(false);
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    setIsSubscribed(true);
+    setTimeout(() => {
+      setEmail("");
+      setIsSubscribed(false);
+    }, 3500);
+  };
+
   return (
     <footer
       className={cn(
-        "w-full bg-background border-t border-border mt-auto pt-16 pb-12 transition-colors",
+        "w-full bg-card border-t border-border mt-auto py-12 sm:py-16 transition-colors",
         className,
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12">
-          {/* Column 1: Brand Logo & Newsletter */}
-          <div className="lg:col-span-4 flex flex-col space-y-4">
-            {/* BookNook Brand Logo */}
-            <div className="flex items-center gap-2.5 select-none group cursor-pointer w-fit">
-              <svg
-                className="h-8 w-8 text-foreground"
-                viewBox="0 0 32 32"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                {/* Leaning book on left */}
-                <path
-                  d="M6 7L10 5V24L6 26V7Z"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M7.5 9L9.5 8V23L7.5 24"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10">
+          {/* Column 1: Logo & Reading Circle Digest */}
+          <div className="sm:col-span-2 lg:col-span-4 flex flex-col space-y-4">
+            <Logo size="lg" />
 
-                {/* Top horizontal book */}
-                <rect
-                  x="12"
-                  y="11"
-                  width="14"
-                  height="5"
-                  rx="1"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                />
-                <path
-                  d="M14 13.5H24"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                />
-
-                {/* Bottom horizontal book */}
-                <rect
-                  x="12"
-                  y="18"
-                  width="15"
-                  height="5"
-                  rx="1"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                />
-                <path
-                  d="M14 20.5H25"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                />
-
-                {/* Dark green underline shelf */}
-                <path
-                  d="M4 29H29"
-                  stroke="var(--primary)"
-                  strokeWidth="3.5"
-                  strokeLinecap="round"
-                />
-              </svg>
-
-              <div className="flex flex-col relative">
-                <span className="text-2xl font-black tracking-tight text-foreground flex items-center">
-                  Book<span className="text-primary">Nook</span>
-                </span>
-                <span className="h-[3.5px] bg-primary w-full rounded-full -mt-0.5" />
-              </div>
-            </div>
-
-            {/* Newsletter Prompt Text */}
-            <p className="text-sm text-muted-foreground max-w-xs leading-relaxed pt-1">
-              Subscribe to our newsletter, Enter your email address
+            <p className="text-sm text-muted-foreground leading-relaxed pt-1 max-w-sm">
+              BookNook is a community-driven digital physical library management
+              platform. Discover, borrow, and contribute books freely with a
+              14-day loan duration.
             </p>
 
-            {/* Newsletter Input & Submit */}
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                // Just design - set functionality later
-              }}
-              className="flex items-center max-w-xs w-full border border-border bg-card overflow-hidden h-11 shadow-2xs focus-within:border-primary transition-colors"
-            >
-              <input
-                type="email"
-                placeholder="email@example.com"
-                required
-                className="flex-1 bg-transparent px-3 text-sm text-foreground placeholder:text-muted-foreground outline-none min-w-0"
-              />
-              <button
-                type="submit"
-                className="bg-foreground text-background hover:bg-primary hover:text-primary-foreground px-4 h-full flex items-center justify-center transition-colors cursor-pointer"
-                aria-label="Subscribe to newsletter"
+            <div className="pt-2">
+              <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-2">
+                Reading Circle Digest
+              </p>
+              <form
+                onSubmit={handleSubscribe}
+                className="flex items-center max-w-xs w-full rounded-xl border border-border bg-background h-10 transition-colors focus-within:border-primary overflow-hidden shadow-2xs"
               >
-                <Send className="w-4 h-4 stroke-[2]" />
-              </button>
-            </form>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="reader@booknook.lib"
+                  required
+                  aria-label="Email address for monthly reading digest"
+                  className="flex-1 bg-transparent px-3 text-xs text-foreground placeholder:text-muted-foreground outline-none min-w-0"
+                />
+                <button
+                  type="submit"
+                  className="bg-primary text-primary-foreground hover:bg-primary-hover w-10 h-full flex items-center justify-center transition-colors cursor-pointer shrink-0"
+                  aria-label="Subscribe to reading digest"
+                >
+                  {isSubscribed ? (
+                    <Check className="w-4 h-4 text-emerald-300" />
+                  ) : (
+                    <Send className="w-4 h-4" />
+                  )}
+                </button>
+              </form>
+              {isSubscribed && (
+                <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium mt-1.5 flex items-center gap-1">
+                  <Check className="w-3.5 h-3.5" />
+                  <span>Subscribed to reading announcements!</span>
+                </p>
+              )}
+            </div>
           </div>
 
-          {/* Column 2: Account Links */}
-          <div className="lg:col-span-2 md:col-span-1">
-            <h4 className="text-base font-semibold text-foreground mb-4">
-              Account
+          {/* Column 2: Explore Navigation */}
+          <div className="lg:col-span-2">
+            <h4 className="text-sm font-bold uppercase tracking-wider text-foreground mb-4">
+              Explore
             </h4>
-            <ul className="space-y-3 text-sm list-none p-0 m-0">
+            <ul className="space-y-2.5 text-sm list-none p-0 m-0">
+              <li>
+                <Link
+                  href="/"
+                  className="text-muted-foreground hover:text-primary transition-colors inline-block"
+                >
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/books"
+                  className="text-muted-foreground hover:text-primary transition-colors inline-block"
+                >
+                  Browse Catalog
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/add-book"
+                  className="text-muted-foreground hover:text-primary transition-colors inline-block"
+                >
+                  Contribute a Book
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 3: Reader Portal */}
+          <div className="lg:col-span-3">
+            <h4 className="text-sm font-bold uppercase tracking-wider text-foreground mb-4">
+              Reader Portal
+            </h4>
+            <ul className="space-y-2.5 text-sm list-none p-0 m-0">
+              <li>
+                <Link
+                  href="/my-books"
+                  className="text-muted-foreground hover:text-primary transition-colors inline-block"
+                >
+                  My Books & Inventory
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/my-borrows"
+                  className="text-muted-foreground hover:text-primary transition-colors inline-block"
+                >
+                  My Borrowed Books
+                </Link>
+              </li>
               <li>
                 <Link
                   href="/login"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-muted-foreground hover:text-primary transition-colors inline-block"
                 >
-                  Login
+                  Sign In
                 </Link>
               </li>
               <li>
                 <Link
                   href="/register"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-muted-foreground hover:text-primary transition-colors inline-block"
                 >
-                  Register
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/account"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  My Account
+                  Create Account
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Column 3: Footer Menu Links */}
-          <div className="lg:col-span-2 md:col-span-1">
-            <h4 className="text-base font-semibold text-foreground mb-4">
-              Footer Menu
+          {/* Column 4: Library Guidelines & Policy */}
+          <div className="sm:col-span-2 lg:col-span-3">
+            <h4 className="text-sm font-bold uppercase tracking-wider text-foreground mb-4">
+              Library Policies
             </h4>
-            <ul className="space-y-3 text-sm list-none p-0 m-0">
-              <li>
-                <Link
-                  href="/search"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Search
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/shop"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Shop
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 4: About Store Info */}
-          <div className="lg:col-span-4 md:col-span-2">
-            <h4 className="text-base font-semibold text-foreground mb-4">
-              About Store
-            </h4>
-            <div className="space-y-2.5 text-sm text-muted-foreground">
-              <p>No. 96, Jecica City, NJ 07305, New York, USA</p>
-              <p>
-                Phone:{" "}
-                <a
-                  href="tel:1234567890"
-                  className="hover:text-primary transition-colors"
-                >
-                  123-456-7890
-                </a>
-              </p>
-              <p>
-                <a
-                  href="mailto:support@example.com"
-                  className="hover:text-primary transition-colors"
-                >
-                  support@example.com
-                </a>
-              </p>
-              <p>Open Hours: MN – ST: 8:00AM – 9:00PM</p>
+            <div className="space-y-3 text-xs text-muted-foreground">
+              <div className="flex items-start gap-2">
+                <Clock className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                <span>
+                  <strong>14-Day Loan Period:</strong> All physical book
+                  borrowings default to 14 calendar days.
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <ShieldCheck className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                <span>
+                  <strong>Real-Time Stock:</strong> Available copies update
+                  atomically upon loan and return.
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <BookOpen className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                <span>
+                  <strong>Community First:</strong> Free open lending designed
+                  to share knowledge without fees.
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Copyright Bar */}
-        <div className="mt-12 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between text-xs text-muted-foreground gap-4">
-          <p>© {new Date().getFullYear()} BookNook. All rights reserved.</p>
+        {/* Bottom Bar */}
+        <div className="pt-8 mt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
+          <p>© {new Date().getFullYear()} BookNook. Built for readers.</p>
           <div className="flex items-center gap-6">
             <Link
-              href="/privacy"
+              href="/books"
               className="hover:text-primary transition-colors"
             >
-              Privacy Policy
+              Catalog
             </Link>
             <Link
-              href="/terms"
+              href="/my-books"
               className="hover:text-primary transition-colors"
             >
-              Terms of Service
+              Inventory
+            </Link>
+            <Link
+              href="/my-borrows"
+              className="hover:text-primary transition-colors"
+            >
+              Borrows
             </Link>
           </div>
         </div>
