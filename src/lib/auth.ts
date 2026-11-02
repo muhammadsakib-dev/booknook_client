@@ -4,22 +4,18 @@ import { jwt } from "better-auth/plugins";
 import { MongoClient } from "mongodb";
 
 // Reuse MongoClient in development to prevent connection exhaustion
-const uri =
-  process.env.MONGODB_URL ||
-  "mongodb+srv://assignment_08:0LWjCTAqpWskwG1W@cluster0.p16xpfx.mongodb.net/";
+const uri = process.env.NEXT_PUBLIC_MONGODB_URI as string;
 
 const client = new MongoClient(uri);
 const db = client.db("assignment-08");
 
-const googleClientId = process.env.GOOGLE_CLIENT_ID?.trim() || "";
-const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET?.trim() || "";
+const googleClientId = process.env.GOOGLE_CLIENT_ID as string;
+const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET as string;
 const isGoogleEnabled = Boolean(googleClientId && googleClientSecret);
 
 export const auth = betterAuth({
-  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
-  secret:
-    process.env.BETTER_AUTH_SECRET ||
-    "booknook_super_secure_jwt_secret_32_chars_key_2026!",
+  baseURL: process.env.BETTER_AUTH_URL as string,
+  secret: process.env.BETTER_AUTH_SECRET as string,
   database: mongodbAdapter(db),
   emailAndPassword: {
     enabled: true,
@@ -38,8 +34,8 @@ export const auth = betterAuth({
   plugins: [
     jwt({
       jwt: {
-        issuer: process.env.BETTER_AUTH_URL || "http://localhost:3000",
-        audience: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000",
+        issuer: process.env.BETTER_AUTH_URL,
+        audience: process.env.NEXT_PUBLIC_API_URL,
         expirationTime: "15m",
       },
     }),

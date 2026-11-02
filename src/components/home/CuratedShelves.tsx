@@ -1,106 +1,15 @@
-import {
-  ArrowRight,
-  Atom,
-  Bookmark,
-  Brain,
-  Compass,
-  Cpu,
-  Landmark,
-  Sparkles,
-} from "lucide-react";
+// Complete the CuratedShelves component
+
+import { ArrowRight, Bookmark, Compass } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-
-interface ShelfItem {
-  id: string;
-  category: string;
-  title: string;
-  description: string;
-  approxCopies: string;
-  accentClass: string;
-  badgeClass: string;
-  icon: typeof Bookmark;
-}
-
-const SHELVES: ShelfItem[] = [
-  {
-    id: "fiction",
-    category: "Fiction",
-    title: "Literary Fiction & Novels",
-    description:
-      "Epoch-defining narratives, intimate character journeys, and contemporary masterpieces bound for physical reading.",
-    approxCopies: "35+ Available",
-    accentClass: "group-hover:border-primary/50 group-hover:bg-primary/5",
-    badgeClass: "bg-primary/10 text-primary border-primary/20",
-    icon: Bookmark,
-  },
-  {
-    id: "science",
-    category: "Science",
-    title: "Scientific Horizons",
-    description:
-      "Cosmology, evolutionary biology, theoretical physics, and the empirical wonders shaping our universe.",
-    approxCopies: "24+ Available",
-    accentClass: "group-hover:border-sky-500/50 group-hover:bg-sky-500/5",
-    badgeClass:
-      "bg-sky-500/10 text-sky-700 dark:text-sky-400 border-sky-500/20",
-    icon: Atom,
-  },
-  {
-    id: "history",
-    category: "History",
-    title: "Historical Chronicles",
-    description:
-      "Ancient empires, eyewitness wartime memoirs, and archival analyses of humanity's pivotal turning points.",
-    approxCopies: "28+ Available",
-    accentClass: "group-hover:border-accent/50 group-hover:bg-accent/5",
-    badgeClass: "bg-accent/15 text-accent-foreground border-accent/30",
-    icon: Landmark,
-  },
-  {
-    id: "philosophy",
-    category: "Philosophy",
-    title: "Philosophy & Human Thought",
-    description:
-      "Classical ethics, metaphysics, existential dialogues, and enduring inquiries into morality and consciousness.",
-    approxCopies: "18+ Available",
-    accentClass: "group-hover:border-purple-500/50 group-hover:bg-purple-500/5",
-    badgeClass:
-      "bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/20",
-    icon: Brain,
-  },
-  {
-    id: "technology",
-    category: "Technology",
-    title: "Computing & Digital Systems",
-    description:
-      "System design architecture, algorithmic theory, cybersecurity, and thoughtful perspectives on machine intelligence.",
-    approxCopies: "26+ Available",
-    accentClass:
-      "group-hover:border-emerald-600/50 group-hover:bg-emerald-600/5",
-    badgeClass:
-      "bg-emerald-600/10 text-emerald-700 dark:text-emerald-400 border-emerald-600/20",
-    icon: Cpu,
-  },
-  {
-    id: "children",
-    category: "Children",
-    title: "Young Minds & Illustrated Tales",
-    description:
-      "Wonder-filled storybooks, illustrated fables, and gentle foundational primers designed to kindle lifelong curiosity.",
-    approxCopies: "19+ Available",
-    accentClass: "group-hover:border-amber-500/50 group-hover:bg-amber-500/5",
-    badgeClass:
-      "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20",
-    icon: Sparkles,
-  },
-];
+import { SHELVES } from "../../../public/data/curated_data";
 
 export function CuratedShelves() {
   return (
     <section
       aria-labelledby="curated-shelves-heading"
-      className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16"
+      className="w-full max-w-7xl mx-auto px-4 sm:px-6 "
     >
       {/* Section Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-12">
@@ -132,7 +41,7 @@ export function CuratedShelves() {
       </div>
 
       {/* Shelves Grid: 1 col on mobile, 2 cols on tablet, 3 cols on desktop */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 max-sm:text-center">
         {SHELVES.map((shelf) => {
           const Icon = shelf.icon;
           return (
@@ -171,9 +80,9 @@ export function CuratedShelves() {
               </div>
 
               {/* Bottom Explore Link */}
-              <div className="mt-6 pt-4 border-t border-border/60 flex items-center justify-between text-xs font-semibold text-primary group-hover:text-primary-hover">
+              <div className="mt-6 pt-4 border-t border-border/60 flex items-center justify-between text-xs font-semibold text-primary group-hover:text-primary-hover max-sm:justify-center ">
                 <span>Explore This Shelf</span>
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1.5" />
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1.5 max-sm:hidden" />
               </div>
             </Link>
           );

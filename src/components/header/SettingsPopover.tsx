@@ -1,3 +1,5 @@
+// Complete the SettingsPopover component
+
 "use client";
 
 import { cn } from "cn";
@@ -29,6 +31,7 @@ export function SettingsPopover() {
 
   return (
     <Popover>
+      {/* 1. Popover Trigger */}
       <PopoverTrigger
         render={
           <Button
@@ -52,8 +55,10 @@ export function SettingsPopover() {
           </Button>
         }
       />
+
+      {/* 2. Popover Content */}
       <PopoverContent align="end" className="w-60 p-5 bg-card">
-        {/* Theme Selection Section */}
+        {/* 2.1 Theme Selection Section */}
         <div className="mb-4">
           <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground pb-1.5 border-b border-border mb-2.5">
             Display Theme
@@ -83,7 +88,7 @@ export function SettingsPopover() {
           </div>
         </div>
 
-        {/* Account Section */}
+        {/* 2.2 Reader Account Section */}
         <div>
           <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground pb-1.5 border-b border-border mb-2.5">
             Reader Account

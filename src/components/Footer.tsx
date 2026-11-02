@@ -1,3 +1,5 @@
+// Complete the Footer component
+
 "use client";
 
 import { cn } from "cn";
@@ -32,9 +34,9 @@ export function Footer({ className }: FooterProps) {
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 items-start max-sm:text-center max-sm:items-center">
           {/* Column 1: Logo & Reading Circle Digest */}
-          <div className="sm:col-span-2 lg:col-span-4 flex flex-col space-y-4">
+          <div className="sm:col-span-2 lg:col-span-4 flex flex-col space-y-4 items-center">
             <Logo size="lg" />
 
             <p className="text-sm text-muted-foreground leading-relaxed pt-1 max-w-sm">

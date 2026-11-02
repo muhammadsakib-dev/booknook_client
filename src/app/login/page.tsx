@@ -1,3 +1,5 @@
+// Complete the LoginPage component
+
 "use client";
 
 import { AlertCircle, ArrowLeft, Lock, LogIn, Mail } from "lucide-react";
@@ -121,12 +123,14 @@ function LoginForm() {
         <span>Continue with Google</span>
       </Button>
 
-      <div className="relative flex items-center justify-center mb-6">
-        <span className="h-px bg-border w-full" />
-        <span className="bg-card px-3 text-[11px] font-semibold uppercase text-muted-foreground tracking-wider">
+      <div className="relative flex items-center gap-3 mb-6">
+        <span className="flex-1 h-px bg-border" />
+
+        <span className="shrink-0 bg-card px-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
           Or with Email
         </span>
-        <span className="h-px bg-border w-full" />
+
+        <span className="flex-1 h-px bg-border" />
       </div>
 
       <form onSubmit={handleEmailLogin} className="space-y-4">

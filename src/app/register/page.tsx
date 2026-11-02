@@ -1,3 +1,5 @@
+// Complete the RegisterPage component
+
 "use client";
 
 import {

@@ -18,8 +18,8 @@ export function Navbar() {
           <ul className="flex items-center gap-8 lg:gap-10 list-none m-0 p-0">
             {navItems.map((item) => {
               const isActive =
-                item.href === "/"? 
-                    pathname === "/"
+                item.href === "/"
+                  ? pathname === "/"
                   : pathname?.startsWith(item.href);
 
               return (

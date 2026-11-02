@@ -1,3 +1,5 @@
+// Complete the RootLayout component
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -26,9 +28,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col bg-background text-foreground transition-colors">
         <ThemeProvider>
           <CartProvider>
+            {/* 1. Global Header with Search, Cart & User Menu */}
             <Header />
+
+            {/* 2. Global Navigation Links */}
             <Navbar />
+
+            {/* 3. Main Page Content */}
             <div className="flex-1">{children}</div>
+
+            {/* 4. Global Footer */}
             <Footer />
           </CartProvider>
         </ThemeProvider>

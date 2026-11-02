@@ -1,3 +1,5 @@
+// Complete the MobileNavSheet component
+
 "use client";
 
 import { cn } from "cn";
@@ -6,7 +8,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { SearchBar } from "@/components/header/SearchBar";
-import { navItems } from "../../../public/data/nav_data";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -18,6 +19,7 @@ import {
 } from "@/components/ui/sheet";
 import { type Theme, useTheme } from "@/hooks/use-theme";
 import { signOut, useSession } from "@/lib/auth-client";
+import { navItems } from "../../../public/data/nav_data";
 
 const THEME_OPTIONS: { label: string; value: Theme }[] = [
   { label: "Light", value: "light" },

@@ -1,3 +1,4 @@
+// Complete the Header component
 "use client";
 
 import { CartSheet } from "@/components/header/CartSheet";
@@ -14,18 +15,18 @@ export function Header() {
           {/* 1. Left: Mobile Navigation Drawer & Desktop Logo */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <MobileNavSheet />
-            {/* Desktop / Tablet Logo (hidden on mobile, shown on md and up) */}
+            {/* Desktop / Tablet Logo */}
             <div className="hidden lg:block">
               <Logo />
             </div>
           </div>
 
-          {/* 2. Mobile Center: Logo is perfectly centered on mobile screens (< md) */}
+          {/* 2. Mobile Center: Centered Logo on Mobile */}
           <div className="lg:hidden absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
             <Logo />
           </div>
 
-          {/* 3. Center: Clean Search Bar (Desktop & Tablet) */}
+          {/* 3. Center: Clean Search Bar */}
           <div className="hidden lg:flex flex-1 max-w-sm lg:max-w-xl mx-2 sm:mx-4 lg:mx-8">
             <SearchBar />
           </div>

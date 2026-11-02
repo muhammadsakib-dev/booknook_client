@@ -28,12 +28,9 @@ export function Banner() {
   const slide = BANNER_SLIDES[currentSlide];
 
   return (
-    <section
-      className="px-4 py-3 sm:px-6 lg:px-8"
-    >
+    <section className="px-4 py-3 sm:px-6 lg:px-8">
       {/* Banner Container */}
       <div className="relative isolate mx-auto h-100 w-full max-w-7xl overflow-hidden rounded-2xl shadow-lg sm:h-110 sm:rounded-3xl lg:h-145">
-
         {/* Background Images */}
         {BANNER_SLIDES.map((s, index) => (
           <div
@@ -42,7 +39,7 @@ export function Banner() {
               "absolute inset-0 transition-opacity duration-700 ease-in-out",
               index === currentSlide
                 ? "opacity-100"
-                : "pointer-events-none opacity-0"
+                : "pointer-events-none opacity-0",
             )}
           >
             <Image
@@ -61,11 +58,10 @@ export function Banner() {
 
         {/* Banner Content */}
         <div className="relative z-10 flex h-full w-full max-w-2xl flex-col justify-center px-5 pb-10 text-white sm:px-10 lg:px-14 max-sm:mx-auto max-sm:items-center max-sm:text-center">
-
           {/* Title */}
           <h1 className="text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
-            {slide.title.split("\n").map((line, index) => (
-              <span key={index} className="block">
+            {slide.title.split("\n").map((line) => (
+              <span key={line} className="block">
                 {line}
               </span>
             ))}
@@ -88,9 +84,8 @@ export function Banner() {
         </div>
 
         {/* Pagination Dots */}
-        <div
+        <nav
           className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2"
-          role="group"
           aria-label="Carousel pagination"
         >
           {BANNER_SLIDES.map((s, index) => {
@@ -107,12 +102,12 @@ export function Banner() {
                   "h-2.5 rounded-full transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white",
                   isActive
                     ? "w-7 bg-white"
-                    : "w-2.5 bg-white/60 hover:bg-white"
+                    : "w-2.5 bg-white/60 hover:bg-white",
                 )}
               />
             );
           })}
-        </div>
+        </nav>
       </div>
     </section>
   );

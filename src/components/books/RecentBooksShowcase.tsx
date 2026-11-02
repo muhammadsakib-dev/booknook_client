@@ -1,3 +1,5 @@
+// Complete the RecentBooksShowcase component
+
 "use client";
 
 import { ArrowRight, BookOpen, Sparkles } from "lucide-react";
@@ -5,58 +7,33 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BookCard } from "@/components/books/BookCard";
 import { buttonVariants } from "@/components/ui/button";
-import { fetchBooks } from "@/lib/books";
 import { cn } from "@/lib/utils";
+import { getBooks } from "@/services/read/getBooks";
 import type { Book } from "@/types/book";
-
-const SKELETON_KEYS = [
-  "skel-1",
-  "skel-2",
-  "skel-3",
-  "skel-4",
-  "skel-5",
-  "skel-6",
-];
 
 export function RecentBooksShowcase() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadNewArrivals() {
-      try {
-        // Sort by newest actual creation timestamp, fetching latest 6 books
-        const data = await fetchBooks({ sort: "newest", limit: 6 });
-        setBooks(data.slice(0, 6));
-      } catch (err) {
-        console.error("Failed to load new arrivals:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadNewArrivals();
-
-    // Revalidate live inventory when books are borrowed or returned
-    const handleInventoryChange = () => {
-      loadNewArrivals();
-    };
-
-    window.addEventListener(
-      "booknook:inventory-updated",
-      handleInventoryChange,
-    );
-    return () => {
-      window.removeEventListener(
-        "booknook:inventory-updated",
-        handleInventoryChange,
-      );
-    };
+    getBooks().then((data) => {
+      setBooks(data);
+      setLoading(false);
+    });
   }, []);
 
+  // Sort by latest createdAt and take first 6 books
+  const latestBooks = [...books]
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt || 0).getTime() -
+        new Date(a.createdAt || 0).getTime(),
+    )
+    .slice(0, 4);
+
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-      {/* 1. Section Header */}
+    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* 1. সেকশন হেডার */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-12">
         <div className="flex flex-col space-y-2">
           <div className="inline-flex items-center gap-2 bg-primary-subtle text-primary border border-primary/20 text-xs font-semibold px-3 py-1 rounded-full w-fit">
@@ -81,24 +58,14 @@ export function RecentBooksShowcase() {
         </Link>
       </div>
 
-      {/* 2. Books Grid: 2 Rows x 3 Columns on Large Screens (6 Newest Books) */}
+      {/* 2. শেষ ৬টি বই .slice(-6).map() করে প্রদর্শন */}
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {SKELETON_KEYS.map((key) => (
-            <div
-              key={key}
-              className="bg-card border border-border rounded-2xl p-4 flex flex-col space-y-3 animate-pulse"
-            >
-              <div className="aspect-[3/4] w-full bg-muted rounded-xl" />
-              <div className="h-4 w-3/4 bg-muted rounded" />
-              <div className="h-3 w-1/2 bg-muted rounded" />
-              <div className="h-8 w-full bg-muted rounded mt-auto" />
-            </div>
-          ))}
+        <div className="text-center py-12 text-muted-foreground">
+          Loading books...
         </div>
-      ) : books.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {books.map((book) => (
+      ) : latestBooks.length > 0 ? (
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          {latestBooks.map((book) => (
             <BookCard key={book._id} book={book} />
           ))}
         </div>
@@ -114,7 +81,7 @@ export function RecentBooksShowcase() {
         </div>
       )}
 
-      {/* 3. Bottom CTA Button */}
+      {/* 3. অল বুকস বাটন */}
       <div className="mt-12 sm:mt-14 text-center">
         <Link
           href="/books"

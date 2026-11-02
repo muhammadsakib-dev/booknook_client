@@ -1,3 +1,5 @@
+// Complete the CartSheet component
+
 "use client";
 
 import {
@@ -15,7 +17,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -26,101 +28,21 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useCart } from "@/hooks/use-cart";
 import { useSession } from "@/lib/auth-client";
-import { checkoutBorrowBag } from "@/lib/books";
 import { cn } from "@/lib/utils";
-
-// Direct localStorage storage key (No Provider needed)
-const CART_STORAGE_KEY = "booknook-borrow-cart";
-
-export interface CartBook {
-  id: string;
-  title: string;
-  author: string;
-  image: string;
-  availableCopies: number;
-}
-
-export interface CartItem {
-  book: CartBook;
-  quantity: number;
-}
+import { createBorrow } from "@/services/create/createBorrow";
 
 export function CartSheet() {
   const { data: session } = useSession();
+  const { items, removeFromCart, updateQuantity, clearCart, totalCount } =
+    useCart();
 
-  // 1. Direct State Management (No Provider, No useCart hook)
-  const [items, setItems] = useState<CartItem[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Sync on initial mount & listen to real-time cart updates
-  useEffect(() => {
-    const loadCart = () => {
-      try {
-        const stored = localStorage.getItem(CART_STORAGE_KEY);
-        if (stored) {
-          setItems(JSON.parse(stored));
-        } else {
-          setItems([]);
-        }
-      } catch (e) {
-        console.error("Failed to read borrow bag from localStorage", e);
-      }
-    };
-
-    loadCart();
-
-    const handleUpdate = () => loadCart();
-    window.addEventListener("booknook:cart-updated", handleUpdate);
-    window.addEventListener("storage", handleUpdate);
-
-    return () => {
-      window.removeEventListener("booknook:cart-updated", handleUpdate);
-      window.removeEventListener("storage", handleUpdate);
-    };
-  }, []);
-
-  // Helper to persist updates directly into localStorage & notify UI
-  const saveCartToStorage = (newItems: CartItem[]) => {
-    setItems(newItems);
-    try {
-      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(newItems));
-      window.dispatchEvent(new Event("booknook:cart-updated"));
-    } catch (e) {
-      console.error("Failed to save borrow bag to localStorage", e);
-    }
-  };
-
-  // Direct simple action functions
-  const removeFromCart = (bookId: string) => {
-    const updated = items.filter((item) => item.book.id !== bookId);
-    saveCartToStorage(updated);
-  };
-
-  const updateQuantity = (bookId: string, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(bookId);
-      return;
-    }
-    const updated = items.map((item) => {
-      if (item.book.id === bookId) {
-        const safeQty = Math.min(quantity, item.book.availableCopies);
-        return { ...item, quantity: safeQty };
-      }
-      return item;
-    });
-    saveCartToStorage(updated);
-  };
-
-  const clearCart = () => {
-    saveCartToStorage([]);
-  };
-
-  const totalCount = items.reduce((sum, item) => sum + item.quantity, 0);
-
-  // Due date: exactly 14 calendar days from today
+  // Due date: 14 calendar days from today
   const dueDate = new Date();
   dueDate.setDate(dueDate.getDate() + 14);
   const formattedDueDate = dueDate.toLocaleDateString("en-US", {
@@ -134,7 +56,7 @@ export function CartSheet() {
 
     setErrorMessage(null);
 
-    // Authentication Guard: require active session
+    // Require active session to borrow
     if (!session?.user) {
       setErrorMessage(
         "You must be signed in to borrow books. Please log in to complete your borrow request.",
@@ -145,19 +67,17 @@ export function CartSheet() {
     setIsSubmitting(true);
 
     try {
-      // Send complete batch payload to POST /borrows
       const checkoutPayload = items.map((item) => ({
         bookId: item.book.id,
         quantity: item.quantity,
       }));
 
-      const result = await checkoutBorrowBag(checkoutPayload);
+      const result = await createBorrow(checkoutPayload);
 
       if (result.success) {
         setIsSuccess(true);
         clearCart();
       } else {
-        // Business failure: preserve items in bag and display actual error
         setErrorMessage(
           result.message || "Failed to complete book borrow request.",
         );
@@ -175,7 +95,7 @@ export function CartSheet() {
 
   return (
     <Sheet>
-      {/* Sheet Trigger - Start */}
+      {/* 1. Sheet Trigger */}
       <SheetTrigger
         render={
           <Button
@@ -204,13 +124,13 @@ export function CartSheet() {
           </Button>
         }
       />
-      {/* Sheet Trigger - End */}
 
+      {/* 2. Sheet Drawer Content */}
       <SheetContent
         side="right"
         className="p-6 flex flex-col justify-between w-full sm:max-w-md overflow-hidden bg-card"
       >
-        {/* 1. Drawer Header */}
+        {/* 2.1 Drawer Header */}
         <SheetHeader className="p-0 pb-4 border-b border-border">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -227,7 +147,7 @@ export function CartSheet() {
           </div>
         </SheetHeader>
 
-        {/* 2. Success Message when Borrow confirmed */}
+        {/* 2.2 Success Message */}
         {isSuccess ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-12 px-2 animate-in zoom-in-95">
             <div className="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-4">
@@ -237,8 +157,8 @@ export function CartSheet() {
               Borrowing Confirmed!
             </h3>
             <p className="text-sm text-muted-foreground mb-6 max-w-xs leading-relaxed">
-              Your physical book borrowing request has been approved and
-              recorded. Copies must be returned by{" "}
+              Your physical book borrowing request has been approved. Copies
+              must be returned by{" "}
               <strong className="text-foreground">{formattedDueDate}</strong>.
             </p>
             <div className="flex flex-col gap-2.5 w-full max-w-xs">
@@ -267,9 +187,8 @@ export function CartSheet() {
             </div>
           </div>
         ) : (
-          /* 3. Selected Books List */
+          /* 2.3 Selected Books List */
           <div className="flex-1 overflow-y-auto py-4 space-y-3.5 pr-1">
-            {/* Error Banner if borrow failed */}
             {errorMessage && (
               <div className="p-3.5 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs leading-relaxed flex items-start gap-2.5">
                 <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
@@ -332,7 +251,7 @@ export function CartSheet() {
                   key={book.id}
                   className="flex items-center gap-3.5 p-3 rounded-xl border border-border bg-card hover:border-primary/30 transition-colors shadow-2xs"
                 >
-                  {/* Book Cover Thumbnail */}
+                  {/* Thumbnail */}
                   <div className="relative w-14 h-20 shrink-0 rounded-lg overflow-hidden bg-muted border border-border/60">
                     <Image
                       src={book.image}
@@ -343,7 +262,7 @@ export function CartSheet() {
                     />
                   </div>
 
-                  {/* Book Info */}
+                  {/* Info */}
                   <div className="flex-1 min-w-0">
                     <h4 className="text-sm font-bold text-foreground line-clamp-1">
                       {book.title}
@@ -353,12 +272,11 @@ export function CartSheet() {
                     </p>
 
                     <div className="flex items-center justify-between">
-                      {/* Available copies indicator */}
                       <span className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">
                         {book.availableCopies} Available
                       </span>
 
-                      {/* Requested Copies Stepper */}
+                      {/* Quantity Stepper */}
                       <div className="flex items-center border border-border rounded-lg bg-background overflow-hidden">
                         <button
                           type="button"
@@ -399,7 +317,7 @@ export function CartSheet() {
           </div>
         )}
 
-        {/* 4. Drawer Footer: Expected Return Date & Confirm Borrowing */}
+        {/* 2.4 Drawer Footer: Expected Return Date & Confirm Borrowing */}
         {!isSuccess && items.length > 0 && (
           <div className="pt-4 border-t border-border space-y-3">
             <div className="p-3 rounded-xl bg-muted/50 border border-border flex items-center justify-between text-xs">

@@ -1,3 +1,5 @@
+// Complete the HomePage component
+
 import { Banner } from "@/components/banner";
 import { RecentBooksShowcase } from "@/components/books/RecentBooksShowcase";
 import { CommunityImpact } from "@/components/home/CommunityImpact";
@@ -9,7 +11,7 @@ export default function Home() {
       {/* 1. Hero Banner Carousel */}
       <Banner />
 
-      {/* 2. Recent 6 Books Showcase Component ("Latest Additions to BookNook") */}
+      {/* 2. Recent 6 Books Showcase ("Latest Additions to BookNook") */}
       <RecentBooksShowcase />
 
       {/* 3. Curated Library Shelves & Reading Categories */}
