@@ -1,36 +1,48 @@
+// Complete the Banner component
+
 "use client";
 
+// Import essential libraries
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { BANNER_SLIDES } from "../../public/data/banner_data";
 
+// Main Banner Component
 export function Banner() {
+  // Track the current slide
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  // Automatically change slide every 6 seconds
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % BANNER_SLIDES.length);
     }, 6000);
 
+    // Clear interval when component unmounts
     return () => clearInterval(timer);
   }, []);
 
+  // Get current slide data
   const slide = BANNER_SLIDES[currentSlide];
 
   return (
-    <section className="w-full px-4 sm:px-6 lg:px-8 pt-2 pb-4">
-      <div className="relative mx-auto h-112 sm:h-128 lg:h-144 max-w-7xl w-full rounded-3xl overflow-hidden shadow-lg border border-border/50">
-        {/* Background Images with smooth fade transition */}
+    <section
+      className="px-4 py-3 sm:px-6 lg:px-8"
+    >
+      {/* Banner Container */}
+      <div className="relative isolate mx-auto h-100 w-full max-w-7xl overflow-hidden rounded-2xl shadow-lg sm:h-110 sm:rounded-3xl lg:h-145">
+
+        {/* Background Images */}
         {BANNER_SLIDES.map((s, index) => (
           <div
             key={s.id}
             className={cn(
-              "absolute inset-0 transition-opacity duration-1000 ease-in-out",
+              "absolute inset-0 transition-opacity duration-700 ease-in-out",
               index === currentSlide
                 ? "opacity-100"
-                : "pointer-events-none opacity-0",
+                : "pointer-events-none opacity-0"
             )}
           >
             <Image
@@ -39,60 +51,63 @@ export function Banner() {
               fill
               unoptimized
               priority={index === 0}
-              className="object-cover object-center"
+              className="object-cover"
             />
           </div>
         ))}
 
-        {/* Cinematic Vignette Overlay */}
-        <div className="absolute inset-0 bg-linear-to-r from-black/85 via-black/55 to-black/25" />
-        <div className="absolute inset-0 bg-radial from-transparent via-transparent to-black/40" />
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/45 to-transparent" />
 
-        {/* Content Container: Responsive padding across 390px, 768px, 1024px, 1440px */}
-        <div className="relative z-10 flex h-full max-w-3xl flex-col justify-center px-6 sm:px-12 lg:px-16 text-white">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.15]">
-            {slide.title.split("\n").map((line) => (
-              <span key={line} className="block">
+        {/* Banner Content */}
+        <div className="relative z-10 flex h-full w-full max-w-2xl flex-col justify-center px-5 pb-10 text-white sm:px-10 lg:px-14 max-sm:mx-auto max-sm:items-center max-sm:text-center">
+
+          {/* Title */}
+          <h1 className="text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
+            {slide.title.split("\n").map((line, index) => (
+              <span key={index} className="block">
                 {line}
               </span>
             ))}
           </h1>
 
-          <p className="mt-4 max-w-lg text-sm sm:text-base md:text-lg text-white/90 leading-relaxed">
+          {/* Description */}
+          <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/90 sm:text-base lg:text-lg">
             {slide.description}
           </p>
 
-          <div className="mt-7">
+          {/* CTA Button */}
+          <div className="mt-6">
             <Link
               href={slide.buttonHref}
-              className="inline-flex items-center justify-center rounded-xl bg-primary text-primary-foreground px-6 sm:px-8 py-3 text-sm sm:text-base font-bold shadow-md transition-all duration-200 hover:bg-primary-hover active:scale-95 cursor-pointer"
+              className="inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover  focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:text-base"
             >
               {slide.buttonText}
             </Link>
           </div>
         </div>
 
-        {/* Accessible Pagination Dots */}
+        {/* Pagination Dots */}
         <div
-          className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2.5"
-          role="tablist"
+          className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2"
+          role="group"
           aria-label="Carousel pagination"
         >
-          {BANNER_SLIDES.map((s, idx) => {
-            const isActive = idx === currentSlide;
+          {BANNER_SLIDES.map((s, index) => {
+            const isActive = index === currentSlide;
+
             return (
               <button
                 key={s.id}
                 type="button"
-                role="tab"
-                aria-selected={isActive}
-                aria-label={`Go to slide ${idx + 1}`}
-                onClick={() => setCurrentSlide(idx)}
+                aria-label={`Go to slide ${index + 1}`}
+                aria-pressed={isActive}
+                onClick={() => setCurrentSlide(index)}
                 className={cn(
-                  "h-2.5 rounded-full transition-all duration-300 cursor-pointer",
+                  "h-2.5 rounded-full transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white",
                   isActive
-                    ? "w-7 bg-white shadow-xs"
-                    : "w-2.5 bg-white/50 hover:bg-white/80",
+                    ? "w-7 bg-white"
+                    : "w-2.5 bg-white/60 hover:bg-white"
                 )}
               />
             );
