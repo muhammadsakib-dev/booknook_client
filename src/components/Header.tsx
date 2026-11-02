@@ -1,4 +1,5 @@
 // Complete the Header component
+
 "use client";
 
 import { CartSheet } from "@/components/header/CartSheet";
@@ -9,30 +10,29 @@ import { SettingsPopover } from "@/components/header/SettingsPopover";
 
 export function Header() {
   return (
-    <header className="w-full border-b bg-background sticky top-0 z-40 lg:static">
-      <div className="max-w-7xl mx-auto max-sm:px-6 lg:px-0">
-        <div className="flex items-center max-sm:h-15 md:h-18 md:px-6 max-sm:px-0 justify-between">
+    <header className="sticky top-0 z-40 w-full border-b border-border bg-card shadow-2xs lg:static">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="relative flex h-16 items-center justify-between gap-4 md:h-18">
           {/* 1. Left: Mobile Navigation Drawer & Desktop Logo */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <MobileNavSheet />
-            {/* Desktop / Tablet Logo */}
             <div className="hidden lg:block">
               <Logo />
             </div>
           </div>
 
-          {/* 2. Mobile Center: Centered Logo on Mobile */}
-          <div className="lg:hidden absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
+          {/* 2. Center (Mobile): Centered Brand Logo */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 lg:hidden">
             <Logo />
           </div>
 
-          {/* 3. Center: Clean Search Bar */}
-          <div className="hidden lg:flex flex-1 max-w-sm lg:max-w-xl mx-2 sm:mx-4 lg:mx-8">
+          {/* 3. Center (Desktop): Search Bar */}
+          <div className="hidden flex-1 justify-center px-4 lg:flex lg:max-w-xl">
             <SearchBar />
           </div>
 
           {/* 4. Right: Borrow Bag (CartSheet) & Settings / Profile */}
-          <div className="flex items-center gap-1.5 sm:gap-3 lg:gap-4 shrink-0">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <CartSheet />
             <SettingsPopover />
           </div>

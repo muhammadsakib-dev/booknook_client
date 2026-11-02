@@ -72,7 +72,7 @@ export function Banner() {
             {slide.description}
           </p>
 
-          {/* CTA Button */}
+          {/* Button */}
           <div className="mt-6">
             <Link
               href={slide.buttonHref}

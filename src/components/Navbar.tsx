@@ -11,11 +11,11 @@ export function Navbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="w-full bg-background/90 backdrop-blur-xs border-b border-border sticky top-0 z-40 transition-colors shadow-2xs hidden lg:block mb-5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="sticky top-0 z-40 mb-5 hidden w-full border-b border-border bg-white  backdrop-blur-xs transition-colors lg:block shadow-2xl shadow-white">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Desktop Navigation: Centered Links with Active Underline Indicator */}
-        <div className="flex items-center justify-center h-12">
-          <ul className="flex items-center gap-8 lg:gap-10 list-none m-0 p-0">
+        <div className="flex h-12 items-center justify-center">
+          <ul className="flex items-center gap-8 lg:gap-10">
             {navItems.map((item) => {
               const isActive =
                 item.href === "/"
@@ -27,15 +27,15 @@ export function Navbar() {
                   <Link
                     href={item.href}
                     className={cn(
-                      "text-sm font-medium transition-colors hover:text-primary relative py-1.5 block",
+                      "relative block py-1.5 text-sm font-medium transition-colors hover:text-primary",
                       isActive
-                        ? "text-primary font-bold"
+                        ? "font-bold text-primary"
                         : "text-foreground/80 hover:text-foreground",
                     )}
                   >
                     <span>{item.label}</span>
                     {isActive && (
-                      <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full transition-all" />
+                      <span className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-primary transition-all" />
                     )}
                   </Link>
                 </li>

@@ -45,7 +45,7 @@ export function SettingsPopover() {
                 <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center shadow-2xs">
                   {session.user.name?.charAt(0).toUpperCase() || "U"}
                 </div>
-                <span className="text-xs font-semibold max-w-[100px] truncate hidden md:inline">
+                <span className="text-xs font-semibold max-w-25 truncate hidden md:inline">
                   {session.user.name?.split(" ")[0]}
                 </span>
               </div>

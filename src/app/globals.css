@@ -108,9 +108,9 @@
   /* ==========================================================================
      LIGHT MODE — BOOKNOOK BRAND PALETTE
      Primary: Deep Forest Green (#243C35)
-     Background: Warm Ivory Tint (#FAF8F5 / #F5F0E7)
-     Accent: Muted Gold (#C18A55)
-     Text: Charcoal (#30332E)
+     Background: Architectural Warm Sand Linen (#ECE4D6) — Rich, distinct, anti-glare
+     Accent: Muted Warm Gold (#C18A55)
+     Text: Deep Forest Charcoal (#1C2420)
      ========================================================================== */
 
   /* 1. BRAND / PRIMARY PALETTE (#243C35) */
@@ -118,39 +118,39 @@
   --primary-foreground: #f5f0e7;
   --primary-hover: #1b2e29;
   --primary-active: #152420;
-  --primary-subtle: #d9e0d7;
+  --primary-subtle: #d3dfd7;
 
-  /* 2. SECONDARY PALETTE (#E8DFD1 / Soft Sage-Beige) */
-  --secondary: #e8dfd1;
-  --secondary-foreground: #30332e;
-  --secondary-hover: #ddd3c3;
+  /* 2. SECONDARY PALETTE (#D5DED6 / Soft Sage Linen) */
+  --secondary: #d5ded6;
+  --secondary-foreground: #1c2420;
+  --secondary-hover: #c4d0c5;
 
   /* 3. ACCENT PALETTE (#C18A55 / Muted Gold) */
   --accent: #c18a55;
   --accent-foreground: #ffffff;
   --accent-hover: #ad7948;
 
-  /* 4. BASE & SURFACES (#FAF8F5 / Warm Ivory) */
-  --background: #faf8f5;
-  --foreground: #30332e;
+  /* 4. BASE & SURFACES (#ECE4D6 / Warm Sand Canvas) */
+  --background: #ece4d6;
+  --foreground: #1c2420;
   --surface: #ffffff;
-  --surface-subtle: #f4efe7;
+  --surface-subtle: #ded4c1;
 
-  /* 5. CARD & POPOVER */
+  /* 5. CARD & POPOVER (Crisp White with bold physical contrast against warm canvas) */
   --card: #ffffff;
-  --card-foreground: #30332e;
+  --card-foreground: #1c2420;
   --popover: #ffffff;
-  --popover-foreground: #30332e;
+  --popover-foreground: #1c2420;
 
   /* 6. MUTED & SUBTLE */
-  --muted: #eeeae3;
-  --muted-foreground: #666c64;
+  --muted: #ded4c1;
+  --muted-foreground: #56605a;
 
   /* 7. BORDERS & INPUTS */
-  --border: #dfd8cc;
-  --border-subtle: #ede7dc;
-  --border-strong: #c2baa9;
-  --input: #dfd8cc;
+  --border: #cfc3ae;
+  --border-subtle: #dfd4c3;
+  --border-strong: #b3a58e;
+  --input: #cec1aa;
   --ring: #243c35;
   --radius: 0.75rem;
 
@@ -176,14 +176,14 @@
   --info-border: #81d4fa;
 
   /* 9. SIDEBAR & NAVIGATION */
-  --sidebar: #f5f0e7;
-  --sidebar-foreground: #30332e;
-  --sidebar-primary: #243c35;
-  --sidebar-primary-foreground: #f5f0e7;
-  --sidebar-accent: #e8dfd1;
-  --sidebar-accent-foreground: #30332e;
-  --sidebar-border: #dfd8cc;
-  --sidebar-ring: #243c35;
+  --sidebar: #243c35;
+  --sidebar-foreground: #f5f0e7;
+  --sidebar-primary: #c18a55;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1e332d;
+  --sidebar-accent-foreground: #f5f0e7;
+  --sidebar-border: #1b2e29;
+  --sidebar-ring: #c18a55;
 
   /* 10. CHARTS */
   --chart-1: #243c35;

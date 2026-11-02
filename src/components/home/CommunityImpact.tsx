@@ -22,7 +22,7 @@ export function CommunityImpact() {
       className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16"
     >
       {/* 1. Impact Metrics Grid */}
-      <div className="bg-card border border-border rounded-3xl p-6 sm:p-10 shadow-xs mb-14 sm:mb-20">
+      <div className="bg-secondary/40 border border-border rounded-3xl p-6 sm:p-10 shadow-xs mb-14 sm:mb-20">
         <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
           <div className="inline-flex items-center gap-2 bg-primary-subtle text-primary border border-primary/20 text-xs font-semibold px-3 py-1 rounded-full w-fit mb-3">
             <HeartHandshake className="w-3.5 h-3.5" />
@@ -47,7 +47,7 @@ export function CommunityImpact() {
             return (
               <div
                 key={metric.label}
-                className="bg-surface border border-border/80 rounded-2xl p-5 sm:p-6 flex flex-col justify-between transition-colors hover:border-primary/40"
+                className="bg-card border border-border/80 rounded-2xl p-5 sm:p-6 flex flex-col justify-between transition-colors hover:border-primary/40 shadow-xs"
               >
                 <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
                   <Icon className="w-4 h-4" />
@@ -160,7 +160,7 @@ export function CommunityImpact() {
           {BORROW_STEPS.map((step) => (
             <div
               key={step.step}
-              className="flex items-start gap-4 p-4 rounded-xl bg-card border border-border/70"
+              className="flex items-start gap-4 p-4 rounded-xl bg-background border border-border/70 shadow-2xs"
             >
               <div className="text-lg font-black text-primary/70 shrink-0 mt-0.5">
                 {step.step}
