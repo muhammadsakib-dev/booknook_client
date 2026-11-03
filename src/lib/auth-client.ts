@@ -1,3 +1,5 @@
+// Completed 
+
 import { createAuthClient } from "better-auth/react";
 
 export const authClient = createAuthClient({
@@ -10,6 +12,7 @@ export const { useSession, signIn, signOut, signUp } = authClient;
  * Retrieves the short-lived API JWT from the active BetterAuth session.
  * Used to populate Authorization: Bearer <token> on requests to the Express backend.
  */
+
 export async function getAuthToken(): Promise<string | null> {
   if (typeof window === "undefined") return null;
 
