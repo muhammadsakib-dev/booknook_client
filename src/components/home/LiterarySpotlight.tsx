@@ -1,4 +1,4 @@
-// Complete the LiterarySpotlight component
+// OK
 
 import { Quote } from "lucide-react";
 import {
@@ -12,7 +12,7 @@ export function LiterarySpotlight() {
       {/* 1. Feature Quote Banner */}
       <div className="relative overflow-hidden rounded-3xl border border-border bg-card p-8 shadow-xs sm:p-12">
         {/* Subtle Decorative Background Quotation Accent */}
-        <Quote className="pointer-events-none absolute -right-4 -top-4 h-32 w-32 text-muted/30 stroke-1" />
+        <Quote className="max-sm:hidden pointer-events-none absolute -right-4 -top-4 h-32 w-32 text-muted/30 stroke-1" />
 
         <div className="relative z-10 mx-auto max-w-3xl text-center">
           <div className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">

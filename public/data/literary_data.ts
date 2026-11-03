@@ -1,3 +1,4 @@
+// OK
 import { Coffee, Compass, Heart } from "lucide-react";
 
 export interface LiteraryPillar {
@@ -8,31 +9,31 @@ export interface LiteraryPillar {
 }
 
 export const LITERARY_QUOTE = {
-  quote: "I have always imagined that Paradise will be a kind of a library.",
-  author: "Jorge Luis Borges",
-  role: "Argentine Writer & Bibliophile",
+  quote: "I have always imagined that this modest gathering of books would one day become a library.",
+  author: "Muhammad Sakib",
+  role: "Founder Of BookNook",
 };
 
 export const LITERARY_PILLARS: LiteraryPillar[] = [
   {
-    id: "screen-free",
-    title: "Screen-Free Haven",
+    id: "quiet-escape",
+    title: "Quiet Reading Moments",
     description:
-      "Stepping away from endless digital feeds into quiet, unhurried moments surrounded by real books and thoughtful ideas.",
+      "Step away from daily noise into a calm world of stories, fresh ideas, and real books.",
     icon: Coffee,
   },
   {
-    id: "living-margins",
-    title: "Living Margins",
+    id: "shared-with-care",
+    title: "Shared with Care",
     description:
-      "Every copy carries the quiet history of readers who turned its pages before you, creating an unspoken shared bond.",
+      "Every book travels from one careful reader to another. Borrow freely, read happily, and return responsibly.",
     icon: Heart,
   },
   {
-    id: "curated-permanence",
-    title: "Curated Permanence",
+    id: "open-for-all",
+    title: "Always Within Reach",
     description:
-      "Literature that has stood the test of time, lovingly cataloged and made freely accessible for generations of readers.",
+      "A handpicked collection of books that you can browse online, pick up yourself, and track anytime.",
     icon: Compass,
   },
 ];
