@@ -1,3 +1,4 @@
+// OK
 import { BookOpen, Clock, Leaf, Sparkles } from "lucide-react";
 
 export interface ReadingPerk {
@@ -10,30 +11,30 @@ export interface ReadingPerk {
 export const READING_PERKS: ReadingPerk[] = [
   {
     id: "physical-print",
-    title: "Tangible Paper Print",
+    title: "Real Paper Books",
     description:
-      "Every book in our collection is a real physical volume, offering the irreplaceable smell, weight, and texture of genuine paper.",
+      "Every book in our collection is a real printed copy. Enjoy the classic feel and smell of turning actual paper pages.",
     icon: BookOpen,
   },
   {
     id: "slow-reading",
-    title: "14-Day Relaxed Loan",
+    title: "14 Days to Read",
     description:
-      "Enjoy two full weeks with each borrowed copy—ample time for unhurried, mindful evening reading without stress.",
+      "Keep each book for two full weeks. Read at your own pace and easily check your return date on the website.",
     icon: Clock,
   },
   {
     id: "free-access",
-    title: "Zero Borrowing Fees",
+    title: "100% Free to Borrow",
     description:
-      "A community-supported literary repository where borrowing is open, transparent, and completely free of charge.",
+      "No membership fees or hidden charges. Simply book online, pick it up yourself, and enjoy reading for free.",
     icon: Sparkles,
   },
   {
     id: "sustainable-circulation",
-    title: "Mindful Circulation",
+    title: "Read, Return, Repeat",
     description:
-      "Prolonging the lifespan of printed books by keeping beloved copies in continuous rotation across neighborly readers.",
+      "When you return a book with care, the next reader gets to enjoy it. Sharing keeps our favorite books alive.",
     icon: Leaf,
   },
 ];

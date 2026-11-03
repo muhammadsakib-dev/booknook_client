@@ -1,4 +1,4 @@
-// Complete the ReadingPerks component
+// OK
 
 import { READING_PERKS } from "../../../public/data/reading_perks_data";
 
@@ -11,25 +11,25 @@ export function ReadingPerks() {
           The Reading Experience
         </span>
         <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
-          Crafted for the Love of <span className="text-primary">Books</span>
+          Made for the Love of <span className="text-primary">Books</span>
         </h2>
         <p className="mx-auto mt-2 max-w-xl text-xs text-muted-foreground sm:text-sm">
-          A dedicated sanctuary celebrating the timeless ritual of physical
-          reading, thoughtful stewardship, and community knowledge.
+          A welcoming space for book lovers—enjoy real paper pages, track your
+          reads online, and share books with honesty and care.
         </p>
       </div>
 
       {/* 2. Perks Grid */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {READING_PERKS.map((perk) => {
           const Icon = perk.icon;
           return (
             <div
               key={perk.id}
-              className="group relative flex flex-col justify-between rounded-2xl border border-border bg-card p-6 shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-md"
+              className="group relative flex flex-col justify-between rounded-2xl border border-border bg-card p-6 shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-md max-sm:text-center "
             >
               <div>
-                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-muted/50 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-muted/50 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground max-sm:mx-auto">
                   <Icon className="h-5 w-5" />
                 </div>
                 <h3 className="text-base font-bold text-foreground">
