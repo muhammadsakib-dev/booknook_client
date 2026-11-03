@@ -10,7 +10,7 @@ import { SettingsPopover } from "@/components/header/SettingsPopover";
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border bg-card shadow-2xs lg:static">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-card shadow-2xs lg:relative">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between gap-4 md:h-18">
           {/* 1. Left: Mobile Navigation Drawer & Desktop Logo */}

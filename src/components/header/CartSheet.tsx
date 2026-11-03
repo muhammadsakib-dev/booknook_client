@@ -163,6 +163,7 @@ export function CartSheet() {
             </p>
             <div className="flex flex-col gap-2.5 w-full max-w-xs">
               <SheetClose
+                nativeButton={false}
                 render={
                   <Link
                     href="/my-borrows"
@@ -200,6 +201,7 @@ export function CartSheet() {
                   {!session?.user && (
                     <div className="mt-2.5">
                       <SheetClose
+                        nativeButton={false}
                         render={
                           <Link
                             href="/login?redirect=/books"
@@ -232,6 +234,7 @@ export function CartSheet() {
                   Borrow Bag to check out for free.
                 </p>
                 <SheetClose
+                  nativeButton={false}
                   render={
                     <Link
                       href="/books"
@@ -254,8 +257,12 @@ export function CartSheet() {
                   {/* Thumbnail */}
                   <div className="relative w-14 h-20 shrink-0 rounded-lg overflow-hidden bg-muted border border-border/60">
                     <Image
-                      src={book.image}
-                      alt={book.title}
+                      src={
+                        book.image && book.image.trim() !== ""
+                          ? book.image
+                          : "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=800"
+                      }
+                      alt={book.title || "Book cover"}
                       fill
                       unoptimized
                       className="object-cover"

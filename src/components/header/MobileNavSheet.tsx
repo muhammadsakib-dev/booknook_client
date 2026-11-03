@@ -17,20 +17,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { type Theme, useTheme } from "@/hooks/use-theme";
 import { signOut, useSession } from "@/lib/auth-client";
 import { navItems } from "../../../public/data/nav_data";
-
-const THEME_OPTIONS: { label: string; value: Theme }[] = [
-  { label: "Light", value: "light" },
-  { label: "Dark", value: "dark" },
-  { label: "System", value: "system" },
-];
 
 export function MobileNavSheet() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const { theme, setTheme } = useTheme();
   const { data: session } = useSession();
 
   return (
@@ -97,29 +89,6 @@ export function MobileNavSheet() {
 
           <Separator />
 
-          {/* Theme Selector Section */}
-          <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 px-2">
-              Theme
-            </h4>
-            <div className="grid grid-cols-3 gap-2">
-              {THEME_OPTIONS.map((opt) => (
-                <Button
-                  key={opt.value}
-                  type="button"
-                  variant={theme === opt.value ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setTheme(opt.value)}
-                  className="text-xs cursor-pointer capitalize"
-                >
-                  {opt.label}
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          <Separator />
-
           {/* Account Section */}
           <div>
             <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 px-2">
@@ -128,14 +97,24 @@ export function MobileNavSheet() {
             <div className="flex flex-col space-y-2 text-sm px-2">
               {session?.user ? (
                 <>
-                  <div className="py-1">
-                    <p className="font-bold text-foreground truncate">
-                      {session.user.name}
-                    </p>
-                    <p className="text-muted-foreground truncate text-xs">
+                  <Link
+                    href="/profile"
+                    onClick={() => setOpen(false)}
+                    className="p-2.5 rounded-xl bg-muted/40 text-xs mb-1 block hover:bg-muted transition-colors border border-border/50 group"
+                  >
+                    <div className="flex items-center justify-between">
+                      <p className="font-bold text-foreground truncate group-hover:text-primary transition-colors">
+                        {session.user.name}
+                      </p>
+                      <span className="text-[10px] bg-primary/10 text-primary font-semibold px-1.5 py-0.5 rounded-md">
+                        Profile
+                      </span>
+                    </div>
+                    <p className="text-muted-foreground truncate text-xs mt-0.5">
                       {session.user.email}
                     </p>
-                  </div>
+                  </Link>
+
                   <button
                     type="button"
                     onClick={async () => {
@@ -143,7 +122,7 @@ export function MobileNavSheet() {
                       await signOut();
                       window.location.reload();
                     }}
-                    className="text-destructive font-semibold text-left py-1 hover:underline cursor-pointer"
+                    className="text-destructive font-semibold text-left py-1 text-xs hover:underline cursor-pointer"
                   >
                     Sign Out
                   </button>

@@ -22,6 +22,43 @@ import { returnBorrow } from "@/services/delete/returnBorrow";
 import { getBorrows } from "@/services/read/getBorrows";
 import type { BorrowRecord } from "@/types/book";
 
+const DEFAULT_BOOK_COVER =
+  "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=800";
+
+function BorrowBookThumbnail({
+  src,
+  alt,
+}: {
+  src?: string | null;
+  alt: string;
+}) {
+  const initial =
+    src && typeof src === "string" && src.trim() !== ""
+      ? src.trim()
+      : DEFAULT_BOOK_COVER;
+  const [imgSrc, setImgSrc] = useState(initial);
+
+  useEffect(() => {
+    if (src && typeof src === "string" && src.trim() !== "") {
+      setImgSrc(src.trim());
+    }
+  }, [src]);
+
+  return (
+    <div className="w-12 h-16 sm:w-14 sm:h-20 rounded-lg overflow-hidden shrink-0 bg-muted border border-border/60 shadow-2xs relative aspect-[3/4]">
+      <Image
+        src={imgSrc}
+        alt={alt}
+        fill
+        sizes="(max-width: 640px) 48px, 56px"
+        unoptimized
+        onError={() => setImgSrc(DEFAULT_BOOK_COVER)}
+        className="object-cover"
+      />
+    </div>
+  );
+}
+
 export default function MyBorrowsPage() {
   const [borrows, setBorrows] = useState<BorrowRecord[]>([]);
   const [loading, setLoading] = useState(true);
@@ -247,30 +284,35 @@ export default function MyBorrowsPage() {
                     {filtered.map((item) => {
                       const isReturned = item.status === "Returned";
                       const isOverdue = item.status === "Overdue";
+                      const rawImage =
+                        item.bookImage ||
+                        (item as { image?: string }).image ||
+                        (item as { coverImage?: string }).coverImage ||
+                        (item as { imageUrl?: string }).imageUrl ||
+                        (item as { cover_image?: string }).cover_image;
+                      const bookTitle = item.bookTitle || "Borrowed Book";
 
                       return (
                         <tr
                           key={item._id}
                           className="hover:bg-muted/30 transition-colors"
                         >
-                          <td className="py-3 px-4 flex items-center gap-3">
-                            <div className="w-10 h-14 relative rounded overflow-hidden shrink-0 bg-muted">
-                              <Image
-                                src={item.bookImage}
-                                alt={item.bookTitle}
-                                fill
-                                unoptimized
-                                className="object-cover"
+                          <td className="py-3.5 px-4">
+                            <div className="flex items-center gap-3.5 min-w-[220px]">
+                              <BorrowBookThumbnail
+                                src={rawImage}
+                                alt={bookTitle}
                               />
-                            </div>
-                            <div>
-                              <p className="font-bold text-sm text-foreground line-clamp-1">
-                                {item.bookTitle}
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                {item.bookAuthor} • {item.quantity}{" "}
-                                {item.quantity === 1 ? "Copy" : "Copies"}
-                              </p>
+                              <div className="min-w-0">
+                                <p className="font-bold text-sm text-foreground line-clamp-1">
+                                  {bookTitle}
+                                </p>
+                                <p className="text-xs text-muted-foreground mt-0.5">
+                                  {item.bookAuthor || "Unknown Author"} •{" "}
+                                  {item.quantity}{" "}
+                                  {item.quantity === 1 ? "Copy" : "Copies"}
+                                </p>
+                              </div>
                             </div>
                           </td>
                           <td className="py-3 px-4 text-muted-foreground">

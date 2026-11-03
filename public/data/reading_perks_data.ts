@@ -37,4 +37,3 @@ export const READING_PERKS: ReadingPerk[] = [
     icon: Leaf,
   },
 ];
-

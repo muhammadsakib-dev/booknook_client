@@ -114,8 +114,8 @@ function BooksContent() {
             </div>
 
             {/* সর্ট ড্রপডাউন */}
-            <div className="flex items-center gap-2 shrink-0">
-              <span className="text-xs font-medium text-muted-foreground">
+            <div className="flex items-center justify-between sm:justify-start gap-2 shrink-0">
+              <span className="text-xs font-medium text-muted-foreground shrink-0">
                 Sort by:
               </span>
               <select
@@ -124,7 +124,7 @@ function BooksContent() {
                   setSortBy(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="h-10 px-3 rounded-xl border border-border bg-background text-sm text-foreground outline-none focus:border-primary cursor-pointer transition-colors"
+                className="h-10 px-3 rounded-xl border border-border bg-background text-sm text-foreground outline-none focus:border-primary cursor-pointer transition-colors flex-1 sm:flex-initial"
               >
                 <option value="default">Default</option>
                 <option value="copies-desc">Most Copies Available</option>
@@ -134,29 +134,37 @@ function BooksContent() {
             </div>
           </div>
 
-          {/* ক্যাটাগরি বাটন তালিকা */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 no-scrollbar">
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1 shrink-0 mr-1">
-              <Filter className="w-3.5 h-3.5" />
-              Category:
-            </span>
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => {
-                  setSelectedCategory(cat);
-                  setCurrentPage(1);
-                }}
-                className={`text-xs font-medium px-3.5 py-1.5 rounded-full transition-colors shrink-0 cursor-pointer ${
-                  selectedCategory === cat
-                    ? "bg-primary text-primary-foreground font-semibold shadow-xs"
-                    : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
+          {/* ক্যাটাগরি বাটন তালিকা (মোবাইলে রেস্পন্সিভ ও স্মুথ হরিজন্টাল স্ক্রোল) */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3 pt-3 sm:pt-2 border-t border-border/60">
+            <div className="flex items-center justify-between shrink-0">
+              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                <Filter className="w-3.5 h-3.5 text-primary" />
+                Category:
+              </span>
+              <span className="text-xs font-medium text-primary sm:hidden">
+                {selectedCategory === "All" ? "All" : selectedCategory}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 overflow-x-auto pb-1.5 pt-0.5 -mx-4 px-4 sm:mx-0 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden scroll-smooth touch-pan-x">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => {
+                    setSelectedCategory(cat);
+                    setCurrentPage(1);
+                  }}
+                  className={`text-xs font-medium px-3.5 py-1.5 rounded-full transition-all shrink-0 cursor-pointer select-none active:scale-95 whitespace-nowrap ${
+                    selectedCategory === cat
+                      ? "bg-primary text-primary-foreground font-semibold shadow-xs"
+                      : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 

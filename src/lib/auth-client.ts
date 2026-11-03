@@ -1,4 +1,4 @@
-// Completed 
+// Completed
 
 import { createAuthClient } from "better-auth/react";
 
@@ -6,7 +6,14 @@ export const authClient = createAuthClient({
   baseURL: process.env.NEXT_PUBLIC_APP_URL as string,
 });
 
-export const { useSession, signIn, signOut, signUp } = authClient;
+export const {
+  useSession,
+  signIn,
+  signOut,
+  signUp,
+  forgetPassword,
+  resetPassword,
+} = authClient;
 
 /**
  * Retrieves the short-lived API JWT from the active BetterAuth session.

@@ -2,8 +2,7 @@
 
 "use client";
 
-import { cn } from "cn";
-import { Check, LogIn, LogOut, Settings, UserPlus } from "lucide-react";
+import { LogIn, LogOut, User, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,17 +10,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { type Theme, useTheme } from "@/hooks/use-theme";
 import { signOut, useSession } from "@/lib/auth-client";
 
-const THEME_OPTIONS: { label: string; value: Theme }[] = [
-  { label: "Light", value: "light" },
-  { label: "Dark", value: "dark" },
-  { label: "System", value: "system" },
-];
-
 export function SettingsPopover() {
-  const { theme, setTheme } = useTheme();
   const { data: session } = useSession();
 
   const handleLogout = async () => {
@@ -38,7 +29,7 @@ export function SettingsPopover() {
             variant="ghost"
             type="button"
             className="flex items-center gap-2 text-foreground hover:text-primary transition-colors cursor-pointer max-sm:hidden h-9 px-2.5 rounded-xl border border-transparent hover:border-border"
-            aria-label="Account profile and display settings"
+            aria-label="Reader account settings"
           >
             {session?.user ? (
               <div className="flex items-center gap-2">
@@ -50,45 +41,15 @@ export function SettingsPopover() {
                 </span>
               </div>
             ) : (
-              <Settings className="w-5 h-5 stroke-[1.8]" />
+              <User className="w-5 h-5 stroke-[1.8]" />
             )}
           </Button>
         }
       />
 
       {/* 2. Popover Content */}
-      <PopoverContent align="end" className="w-60 p-5 bg-card">
-        {/* 2.1 Theme Selection Section */}
-        <div className="mb-4">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground pb-1.5 border-b border-border mb-2.5">
-            Display Theme
-          </h4>
-          <div className="flex flex-col space-y-1 text-sm">
-            {THEME_OPTIONS.map((opt) => {
-              const isSelected = theme === opt.value;
-              return (
-                <button
-                  key={opt.value}
-                  type="button"
-                  onClick={() => setTheme(opt.value)}
-                  className={cn(
-                    "flex items-center justify-between text-left transition-colors cursor-pointer py-1.5 px-2 rounded-lg text-xs font-medium",
-                    isSelected
-                      ? "text-primary font-bold bg-primary-subtle/50"
-                      : "text-foreground hover:text-primary hover:bg-muted/60",
-                  )}
-                >
-                  <span>{opt.label}</span>
-                  {isSelected && (
-                    <Check className="w-3.5 h-3.5 text-primary stroke-[2.5]" />
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* 2.2 Reader Account Section */}
+      <PopoverContent align="end" className="w-56 p-4 bg-card">
+        {/* Reader Account Section */}
         <div>
           <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground pb-1.5 border-b border-border mb-2.5">
             Reader Account
@@ -96,14 +57,23 @@ export function SettingsPopover() {
           <div className="flex flex-col space-y-1.5 text-sm">
             {session?.user ? (
               <>
-                <div className="px-2 py-1.5 rounded-lg bg-muted/40 text-xs mb-1">
-                  <p className="font-bold text-foreground truncate">
-                    {session.user.name}
-                  </p>
+                <Link
+                  href="/profile"
+                  className="px-2.5 py-2 rounded-xl bg-muted/50 hover:bg-muted text-xs mb-1 block transition-colors group cursor-pointer border border-border/50"
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="font-bold text-foreground truncate group-hover:text-primary transition-colors">
+                      {session.user.name}
+                    </p>
+                    <span className="text-[10px] bg-primary/10 text-primary font-semibold px-1.5 py-0.5 rounded-md">
+                      Profile
+                    </span>
+                  </div>
                   <p className="text-muted-foreground truncate text-[11px] mt-0.5">
                     {session.user.email}
                   </p>
-                </div>
+                </Link>
+
                 <button
                   type="button"
                   onClick={handleLogout}

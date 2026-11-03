@@ -1,4 +1,4 @@
-// Complete the AddBookPage component
+// Completed
 
 "use client";
 
@@ -29,7 +29,7 @@ export default function AddBookPage() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [createdBook, setCreatedBook] = useState<Book | null>(null);
 
-  // সাবমিট হ্যান্ডলার
+  // Simple
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
@@ -64,7 +64,7 @@ export default function AddBookPage() {
     }
   };
 
-  // ফর্ম রিসেট
+  // Reset form
   const handleResetForm = () => {
     setTitle("");
     setAuthor("");
@@ -77,7 +77,7 @@ export default function AddBookPage() {
     setErrorMsg(null);
   };
 
-  // লাইভ প্রিভিউ অবজেক্ট
+  // Live preview book object
   const previewBook: Book = {
     _id: "preview-id",
     title: title || "Untitled Book Title",
@@ -96,7 +96,7 @@ export default function AddBookPage() {
     <ProtectedRoute>
       <div className="min-h-screen bg-background py-10 sm:py-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* 1. নেভিগেশন ও ব্রেডক্রাম্ব */}
+          {/* 1. Navigation */}
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
             <Link
               href="/"
@@ -116,7 +116,7 @@ export default function AddBookPage() {
             <span className="text-foreground font-medium">Add New Book</span>
           </div>
 
-          {/* 2. হেডার সেকশন */}
+          {/* 2. Header section */}
           <div className="max-w-3xl mb-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-3">
               <Sparkles className="w-3.5 h-3.5" />
@@ -131,7 +131,7 @@ export default function AddBookPage() {
             </p>
           </div>
 
-          {/* 3. সফল মেসেজ বা মূল ফর্ম */}
+          {/* 3. Success message or main form */}
           {createdBook ? (
             <div className="bg-card border border-border rounded-2xl p-8 sm:p-10 shadow-lg max-w-xl mx-auto text-center space-y-6">
               <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto">
@@ -175,7 +175,7 @@ export default function AddBookPage() {
                     </div>
                   )}
 
-                  {/* বইয়ের নাম */}
+                  {/* Book title */}
                   <div className="space-y-1.5">
                     <label
                       htmlFor="title"
@@ -194,7 +194,7 @@ export default function AddBookPage() {
                     />
                   </div>
 
-                  {/* লেখক ও ক্যাটাগরি */}
+                  {/* Author and Category */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
                       <label
@@ -236,7 +236,7 @@ export default function AddBookPage() {
                     </div>
                   </div>
 
-                  {/* কপি সংখ্যা ও রেটিং */}
+                  {/* Available Copies and Rating */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
                       <label
@@ -277,7 +277,7 @@ export default function AddBookPage() {
                     </div>
                   </div>
 
-                  {/* কভার ইমেজ URL ও স্যাম্পল বাটন */}
+                  {/* Cover Image URL and Sample Button */}
                   <div className="space-y-1.5">
                     <label
                       htmlFor="image"
@@ -315,7 +315,7 @@ export default function AddBookPage() {
                     </div>
                   </div>
 
-                  {/* সারসংক্ষেপ */}
+                  {/* Description */}
                   <div className="space-y-1.5">
                     <label
                       htmlFor="description"
@@ -329,11 +329,11 @@ export default function AddBookPage() {
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
                       placeholder="Short blurb about the contents of this book..."
-                      className="w-full p-3.5 rounded-xl border border-border bg-background text-sm text-foreground outline-none focus:border-primary transition-colors resize-y min-h-[80px]"
+                      className="w-full p-3.5 rounded-xl border border-border bg-background text-sm text-foreground outline-none focus:border-primary transition-colors resize-y min-h-20"
                     />
                   </div>
 
-                  {/* সাবমিট বাটন */}
+                  {/* Submit Button */}
                   <div className="pt-2 flex items-center gap-3">
                     <Button
                       type="submit"
@@ -362,7 +362,7 @@ export default function AddBookPage() {
                 </form>
               </div>
 
-              {/* লাইভ প্রিভিউ কলাম (সরাসরি ক্যানোনিকাল BookCard কম্পোনেন্ট) */}
+              {/* Live Preview Column */}
               <div className="lg:col-span-5 flex flex-col space-y-4">
                 <div className="flex items-center justify-between px-1">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">

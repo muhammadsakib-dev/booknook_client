@@ -1,4 +1,4 @@
-// Completed 
+// Completed
 
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
@@ -15,6 +15,9 @@ const googleClientId = process.env.GOOGLE_CLIENT_ID as string;
 const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET as string;
 const isGoogleEnabled = Boolean(googleClientId && googleClientSecret);
 
+// In-memory store for demo reset tokens
+export const demoResetTokens = new Map<string, string>();
+
 export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL as string,
   secret: process.env.BETTER_AUTH_SECRET as string,
@@ -24,6 +27,10 @@ export const auth = betterAuth({
     minPasswordLength: 6,
     requireUppercase: true,
     requireLowercase: true,
+    sendResetPassword: async ({ user, url, token }) => {
+      console.log(`[Password Reset] Link for ${user.email}: ${url}`);
+      demoResetTokens.set(user.email.toLowerCase(), token);
+    },
   },
   socialProviders: {
     google: {
