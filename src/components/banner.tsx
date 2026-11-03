@@ -1,5 +1,4 @@
-// Complete the Banner component
-
+// OK
 "use client";
 
 // Import essential libraries

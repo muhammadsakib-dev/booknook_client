@@ -1,37 +1,49 @@
-export const BANNER_SLIDES = [
+// OK
+export interface BannerSlide {
+  id: number;
+  title: string;
+  description: string;
+  buttonText: string;
+  buttonHref: string;
+  imageUrl: string;
+  imageAlt: string;
+}
+
+export const BANNER_SLIDES: BannerSlide[] = [
   {
     id: 1,
-    title: "Find Your Next\nGreat Read.",
+    title: "Find & Book Your\nNext Read Online.",
     description:
-      "Step inside our quiet corner. Browse handpicked shelves, borrow tales that stay with you, and rediscover the simple joy of turning real pages.",
+      "Browse our shelves from home, check which books are available right now, and reserve your favorite copy in just a few clicks.",
     buttonText: "Browse Books",
     buttonHref: "/books",
     imageUrl:
-      "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=2070&auto=format&fit=crop",
+      "https://ik.imagekit.io/muhammadsakib/Assignment-08/B_01.jpg?updatedAt=1793722358335",
     imageAlt:
-      "Warm morning sunlight streaming through tall library windows onto wooden desks",
+      "Warmly lit wooden bookshelf filled with organized hardcover and paperback books",
   },
   {
     id: 2,
-    title: "Stories That\nNever Get Old.",
+    title: "Pick It Up Yourself,\nRead in Peace.",
     description:
-      "From dog-eared classics to fresh neighborhood discoveries, there is always another adventure waiting quietly on our shelves.",
+      "No waiting in line. Visit the shelf, pick up your reserved book on your own responsibility, and enjoy the quiet joy of real paper pages.",
     buttonText: "Explore the Shelves",
     buttonHref: "/books",
     imageUrl:
-      "https://ik.imagekit.io/muhammadsakib/Assignment-08/pexels-tima-miroshnichenko-9572540.jpg?updatedAt=1793379447037",
+      "https://ik.imagekit.io/muhammadsakib/Assignment-08/B_02.jpg",
     imageAlt:
-      "Cozy library shelves stacked with timeless hardcover and paperback books",
+      "Reader gently taking a book directly from a wooden library shelf",
   },
   {
     id: 3,
-    title: "Pass It Along,\nRead Together.",
+    title: "Tracked Online,\nBuilt on Trust.",
     description:
-      "Share the paperbacks sitting on your nightstand and borrow from fellow bookworms nearby. Good stories are meant to travel.",
-    buttonText: "Join Our Circle",
+      "Check your return dates anytime from your account. When you finish reading, simply place the book back on the shelf for the next reader.",
+    buttonText: "Join the Library",
     buttonHref: "/register",
     imageUrl:
-      "https://images.unsplash.com/photo-1568667256549-094345857637?q=80&w=2070&auto=format&fit=crop",
-    imageAlt: "Spacious community reading room with readers sharing books",
+      "https://ik.imagekit.io/muhammadsakib/Assignment-08/B_03.jpg",
+    imageAlt:
+      "Neatly stacked books on a wooden table ready for the next reader",
   },
 ];
