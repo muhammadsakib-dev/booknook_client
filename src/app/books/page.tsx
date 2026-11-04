@@ -23,21 +23,22 @@ function BooksContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const urlCategory = searchParams.get("category");
+  const urlSearch = searchParams.get("search");
 
   const [books, setBooks] = useState<Book[]>([]);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(urlSearch || "");
   const [selectedCategory, setSelectedCategory] = useState(
     urlCategory || "All",
   );
   const [sortBy, setSortBy] = useState("default");
   const [currentPage, setCurrentPage] = useState(1);
 
-  // সাধারণ নিয়মে সরাসরি ডাটা ফেচ
+  // Fetch books
   useEffect(() => {
     getBooks().then(setBooks);
   }, []);
 
-  // URL ক্যাটাগরি পরিবর্তিত হলে সিঙ্ক
+  // Sync URL category
   useEffect(() => {
     if (urlCategory) {
       setSelectedCategory(urlCategory);
@@ -45,7 +46,13 @@ function BooksContent() {
     }
   }, [urlCategory]);
 
-  // ফিল্টার রিসেট
+  // Sync URL search
+  useEffect(() => {
+    setSearch(urlSearch || "");
+    setCurrentPage(1);
+  }, [urlSearch]);
+
+  // Reset filters
   const handleReset = () => {
     setSearch("");
     setSelectedCategory("All");
@@ -54,7 +61,7 @@ function BooksContent() {
     router.replace("/books");
   };
 
-  // ক্যাটাগরি তালিকা তৈরি
+  // Build categories
   const categories = [
     "All",
     ...Array.from(
@@ -62,13 +69,16 @@ function BooksContent() {
     ),
   ];
 
-  // ফিল্টারিং ও সর্টিং
+  // Filter and sort
   const filteredBooks = books
     .filter((b) => {
       const item = normalizeBook(b);
+      const q = search.trim().toLowerCase();
       const matchesSearch =
-        item.title.toLowerCase().includes(search.toLowerCase()) ||
-        item.author.toLowerCase().includes(search.toLowerCase());
+        !q ||
+        item.title.toLowerCase().includes(q) ||
+        item.author.toLowerCase().includes(q) ||
+        item.category.toLowerCase().includes(q);
       const matchesCategory =
         selectedCategory === "All" || item.category === selectedCategory;
       return matchesSearch && matchesCategory;
@@ -84,7 +94,7 @@ function BooksContent() {
       return 0;
     });
 
-  // পেজিনেশন হিসাব (প্রতি পেজে ৮টি বই)
+  // Calculate pagination
   const totalPages = Math.ceil(filteredBooks.length / BOOKS_PER_PAGE);
   const startIndex = (currentPage - 1) * BOOKS_PER_PAGE;
   const currentBooks = filteredBooks.slice(
@@ -95,10 +105,10 @@ function BooksContent() {
   return (
     <div className="w-full bg-background min-h-screen py-8 sm:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* সার্চ, ক্যাটাগরি এবং সর্টিং কন্ট্রোল */}
+        {/* Controls */}
         <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 mb-8 shadow-xs flex flex-col gap-4">
           <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
-            {/* সার্চ ইনপুট */}
+            {/* Search input */}
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <input
@@ -113,7 +123,7 @@ function BooksContent() {
               />
             </div>
 
-            {/* সর্ট ড্রপডাউন */}
+            {/* Sort select */}
             <div className="flex items-center justify-between sm:justify-start gap-2 shrink-0">
               <span className="text-xs font-medium text-muted-foreground shrink-0">
                 Sort by:
@@ -134,7 +144,7 @@ function BooksContent() {
             </div>
           </div>
 
-          {/* ক্যাটাগরি বাটন তালিকা (মোবাইলে রেস্পন্সিভ ও স্মুথ হরিজন্টাল স্ক্রোল) */}
+          {/* Category list */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3 pt-3 sm:pt-2 border-t border-border/60">
             <div className="flex items-center justify-between shrink-0">
               <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
@@ -168,7 +178,7 @@ function BooksContent() {
           </div>
         </div>
 
-        {/* ফলাফল সংখ্যা ও রিসেট বাটন */}
+        {/* Result count */}
         <div className="flex items-center justify-between text-xs text-muted-foreground mb-6">
           <span>
             Showing{" "}
@@ -192,7 +202,7 @@ function BooksContent() {
           )}
         </div>
 
-        {/* বইয়ের গ্রিড (৮টি বই) */}
+        {/* Book grid */}
         {currentBooks.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {currentBooks.map((book) => (
@@ -214,7 +224,7 @@ function BooksContent() {
           </div>
         )}
 
-        {/* পেজিনেশন কন্ট্রোল (যদি একাধিক পেজ থাকে) */}
+        {/* Pagination */}
         {totalPages > 1 && (
           <div className="flex items-center justify-center gap-2 mt-12 sm:mt-16">
             <button

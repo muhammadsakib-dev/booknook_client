@@ -1,4 +1,4 @@
-// Complete the MobileNavSheet component
+// OK
 
 "use client";
 
@@ -35,7 +35,7 @@ export function MobileNavSheet() {
             className="lg:hidden text-foreground hover:text-primary -ml-2 cursor-pointer"
             aria-label="Open mobile navigation menu"
           >
-            <Menu className="w-5 h-5 stroke-[2]" />
+            <Menu className="w-6! h-6! stroke-3" />
           </Button>
         }
       />

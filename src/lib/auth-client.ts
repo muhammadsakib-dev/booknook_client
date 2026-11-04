@@ -11,9 +11,11 @@ export const {
   signIn,
   signOut,
   signUp,
-  forgetPassword,
+  requestPasswordReset,
   resetPassword,
 } = authClient;
+
+export const forgetPassword = authClient.requestPasswordReset;
 
 /**
  * Retrieves the short-lived API JWT from the active BetterAuth session.

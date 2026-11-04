@@ -9,7 +9,8 @@ export interface LiteraryPillar {
 }
 
 export const LITERARY_QUOTE = {
-  quote: "I have always imagined that this modest gathering of books would one day become a library.",
+  quote:
+    "I have always imagined that this modest gathering of books would one day become a library.",
   author: "Muhammad Sakib",
   role: "Founder Of BookNook",
 };

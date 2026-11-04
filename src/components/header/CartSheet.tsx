@@ -1,20 +1,7 @@
-// Complete the CartSheet component
-
+// OK
 "use client";
 
-import {
-  AlertCircle,
-  BookBookmark,
-  BookOpen,
-  Calendar,
-  CheckCircle2,
-  Clock,
-  Loader2,
-  LogIn,
-  Minus,
-  Plus,
-  Trash2,
-} from "lucide-react";
+import { AlertCircle, BookBookmark, LogIn } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -28,10 +15,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useCart } from "@/hooks/use-cart";
 import { useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
+import { useCart } from "@/providers/cart-provider";
 import { createBorrow } from "@/services/create/createBorrow";
+import { CartEmptyView } from "./cart/CartEmptyView";
+import { CartFooter } from "./cart/CartFooter";
+import { CartItemCard } from "./cart/CartItemCard";
+import { CartSuccessView } from "./cart/CartSuccessView";
 
 export function CartSheet() {
   const { data: session } = useSession();
@@ -51,12 +42,13 @@ export function CartSheet() {
     year: "numeric",
   });
 
+  // Confirm Borrow Handler
   const handleConfirmBorrow = async () => {
-    if (items.length === 0 || isSubmitting) return;
+    if (isSubmitting) return;
 
     setErrorMessage(null);
 
-    // Require active session to borrow
+    // Require active session
     if (!session?.user) {
       setErrorMessage(
         "You must be signed in to borrow books. Please log in to complete your borrow request.",
@@ -109,7 +101,7 @@ export function CartSheet() {
                 alt="Borrow Bag"
                 width={360}
                 height={360}
-                className="h-6 w-auto max-sm:h-5 max-sm:w-auto max-md:h-6 max-md:w-auto"
+                className="h-6 w-auto max-sm:h-5 max-md:h-6"
               />
               <Badge
                 variant="default"
@@ -130,7 +122,7 @@ export function CartSheet() {
         side="right"
         className="p-6 flex flex-col justify-between w-full sm:max-w-md overflow-hidden bg-card"
       >
-        {/* 2.1 Drawer Header */}
+        {/* Drawer Header */}
         <SheetHeader className="p-0 pb-4 border-b border-border">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -147,49 +139,15 @@ export function CartSheet() {
           </div>
         </SheetHeader>
 
-        {/* 2.2 Success Message */}
+        {/* Drawer Body */}
         {isSuccess ? (
-          <div className="flex flex-col items-center justify-center h-full text-center py-12 px-2 animate-in zoom-in-95">
-            <div className="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-4">
-              <CheckCircle2 className="w-8 h-8 stroke-2" />
-            </div>
-            <h3 className="text-lg font-bold text-foreground mb-2">
-              Borrowing Confirmed!
-            </h3>
-            <p className="text-sm text-muted-foreground mb-6 max-w-xs leading-relaxed">
-              Your physical book borrowing request has been approved. Copies
-              must be returned by{" "}
-              <strong className="text-foreground">{formattedDueDate}</strong>.
-            </p>
-            <div className="flex flex-col gap-2.5 w-full max-w-xs">
-              <SheetClose
-                nativeButton={false}
-                render={
-                  <Link
-                    href="/my-borrows"
-                    className={cn(
-                      buttonVariants({ size: "sm" }),
-                      "w-full bg-primary hover:bg-primary-hover text-primary-foreground font-semibold cursor-pointer",
-                    )}
-                  >
-                    View in My Borrows
-                  </Link>
-                }
-              />
-              <Button
-                variant="outline"
-                size="sm"
-                type="button"
-                onClick={() => setIsSuccess(false)}
-                className="w-full text-xs cursor-pointer"
-              >
-                Close Drawer
-              </Button>
-            </div>
-          </div>
+          <CartSuccessView
+            dueDate={formattedDueDate}
+            onClose={() => setIsSuccess(false)}
+          />
         ) : (
-          /* 2.3 Selected Books List */
           <div className="flex-1 overflow-y-auto py-4 space-y-3.5 pr-1">
+            {/* Error Message */}
             {errorMessage && (
               <div className="p-3.5 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs leading-relaxed flex items-start gap-2.5">
                 <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
@@ -221,156 +179,31 @@ export function CartSheet() {
               </div>
             )}
 
+            {/* Empty or Items */}
             {items.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full text-center py-16">
-                <div className="w-16 h-16 rounded-full bg-primary-subtle text-primary flex items-center justify-center mb-4">
-                  <BookOpen className="w-8 h-8 stroke-[1.5]" />
-                </div>
-                <p className="text-base font-semibold text-foreground mb-1">
-                  Your Borrow Bag is empty.
-                </p>
-                <p className="text-xs text-muted-foreground mb-6 max-w-xs leading-relaxed">
-                  Browse available books in our catalog and add them to your
-                  Borrow Bag to check out for free.
-                </p>
-                <SheetClose
-                  nativeButton={false}
-                  render={
-                    <Link
-                      href="/books"
-                      className={cn(
-                        buttonVariants({ size: "sm" }),
-                        "bg-primary hover:bg-primary-hover text-primary-foreground cursor-pointer",
-                      )}
-                    >
-                      Browse Library Catalog
-                    </Link>
-                  }
-                />
-              </div>
+              <CartEmptyView />
             ) : (
-              items.map(({ book, quantity }) => (
-                <div
-                  key={book.id}
-                  className="flex items-center gap-3.5 p-3 rounded-xl border border-border bg-card hover:border-primary/30 transition-colors shadow-2xs"
-                >
-                  {/* Thumbnail */}
-                  <div className="relative w-14 h-20 shrink-0 rounded-lg overflow-hidden bg-muted border border-border/60">
-                    <Image
-                      src={
-                        book.image && book.image.trim() !== ""
-                          ? book.image
-                          : "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=800"
-                      }
-                      alt={book.title || "Book cover"}
-                      fill
-                      unoptimized
-                      className="object-cover"
-                    />
-                  </div>
-
-                  {/* Info */}
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-bold text-foreground line-clamp-1">
-                      {book.title}
-                    </h4>
-                    <p className="text-xs text-muted-foreground line-clamp-1 mb-2">
-                      by {book.author}
-                    </p>
-
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">
-                        {book.availableCopies} Available
-                      </span>
-
-                      {/* Quantity Stepper */}
-                      <div className="flex items-center border border-border rounded-lg bg-background overflow-hidden">
-                        <button
-                          type="button"
-                          onClick={() => updateQuantity(book.id, quantity - 1)}
-                          className="p-1 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-                          aria-label={`Decrease requested copies of ${book.title}`}
-                        >
-                          <Minus className="w-3 h-3" />
-                        </button>
-                        <span className="px-2.5 text-xs font-bold text-foreground select-none">
-                          {quantity}
-                        </span>
-                        <button
-                          type="button"
-                          disabled={quantity >= book.availableCopies}
-                          onClick={() => updateQuantity(book.id, quantity + 1)}
-                          className="p-1 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
-                          aria-label={`Increase requested copies of ${book.title}`}
-                        >
-                          <Plus className="w-3 h-3" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Remove Button */}
-                  <button
-                    type="button"
-                    onClick={() => removeFromCart(book.id)}
-                    className="p-1.5 text-muted-foreground hover:text-destructive transition-colors rounded-md cursor-pointer self-start"
-                    aria-label={`Remove ${book.title} from borrow bag`}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
+              items.map((item) => (
+                <CartItemCard
+                  key={item.book.id}
+                  item={item}
+                  onUpdateQuantity={updateQuantity}
+                  onRemove={removeFromCart}
+                />
               ))
             )}
           </div>
         )}
 
-        {/* 2.4 Drawer Footer: Expected Return Date & Confirm Borrowing */}
+        {/* Drawer Footer */}
         {!isSuccess && items.length > 0 && (
-          <div className="pt-4 border-t border-border space-y-3">
-            <div className="p-3 rounded-xl bg-muted/50 border border-border flex items-center justify-between text-xs">
-              <span className="flex items-center gap-1.5 text-muted-foreground font-medium">
-                <Calendar className="w-3.5 h-3.5 text-primary" />
-                Expected Return Date:
-              </span>
-              <span className="font-bold text-foreground flex items-center gap-1">
-                <Clock className="w-3 h-3 text-primary" />
-                {formattedDueDate} (14 Days)
-              </span>
-            </div>
-
-            <div className="flex gap-2.5">
-              <Button
-                variant="outline"
-                size="sm"
-                type="button"
-                disabled={isSubmitting}
-                onClick={clearCart}
-                className="text-xs text-muted-foreground hover:text-destructive cursor-pointer h-10 px-3"
-                aria-label="Clear all books from borrow bag"
-              >
-                Clear Bag
-              </Button>
-              <Button
-                size="sm"
-                type="button"
-                disabled={isSubmitting}
-                onClick={handleConfirmBorrow}
-                className="flex-1 bg-primary hover:bg-primary-hover text-primary-foreground font-bold cursor-pointer h-10"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin mr-1.5" />
-                    <span>Confirming Borrow...</span>
-                  </>
-                ) : (
-                  <span>
-                    Confirm Borrowing ({totalCount}{" "}
-                    {totalCount === 1 ? "Book" : "Books"})
-                  </span>
-                )}
-              </Button>
-            </div>
-          </div>
+          <CartFooter
+            totalCount={totalCount}
+            dueDate={formattedDueDate}
+            isSubmitting={isSubmitting}
+            onClear={clearCart}
+            onConfirm={handleConfirmBorrow}
+          />
         )}
       </SheetContent>
     </Sheet>

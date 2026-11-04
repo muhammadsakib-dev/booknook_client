@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useCart } from "@/hooks/use-cart";
+import { useCart } from "@/providers/cart-provider";
 import { type Book, normalizeBook } from "@/types/book";
 
 interface BookCardProps {

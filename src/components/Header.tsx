@@ -17,13 +17,13 @@ export function Header() {
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <MobileNavSheet />
             <div className="hidden lg:block">
-              <Logo />
+              <Logo size="lg" />
             </div>
           </div>
 
           {/* 2. Center (Mobile): Centered Brand Logo */}
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 lg:hidden">
-            <Logo />
+            <Logo size="lg" />
           </div>
 
           {/* 3. Center (Desktop): Search Bar */}

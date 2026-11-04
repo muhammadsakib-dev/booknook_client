@@ -21,7 +21,7 @@ import { useEffect, useState } from "react";
 import { BookCard } from "@/components/books/BookCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useCart } from "@/hooks/use-cart";
+import { useCart } from "@/providers/cart-provider";
 import { getBookById } from "@/services/read/getBookById";
 import { getBooks } from "@/services/read/getBooks";
 import { type Book, normalizeBook } from "@/types/book";

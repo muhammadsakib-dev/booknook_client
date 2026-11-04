@@ -11,14 +11,16 @@ export function Navbar() {
 
   return (
     <nav className="sticky top-0 z-40 mb-5 hidden w-full border-b border-border bg-white  backdrop-blur-xs transition-colors lg:block shadow-2xl shadow-white">
-
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Desktop Navigation: Centered Links with Active Underline Indicator */}
 
         <div className="flex h-12 items-center justify-center">
           <ul className="flex items-center gap-8 lg:gap-10">
             {navItems.map((item) => {
-              const isActive = item.href === "/" ? pathname === "/" : pathname?.startsWith(item.href);
+              const isActive =
+                item.href === "/"
+                  ? pathname === "/"
+                  : pathname?.startsWith(item.href);
               return (
                 <li key={item.label}>
                   <Link
@@ -40,9 +42,7 @@ export function Navbar() {
             })}
           </ul>
         </div>
-
       </div>
-
     </nav>
   );
 }

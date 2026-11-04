@@ -192,7 +192,7 @@ export function SearchBar({ onSearchSubmit }: SearchBarProps = {}) {
         </Button>
       </form>
 
-      {/* লাইভ সার্চ ড্রপডাউন রেজাল্ট */}
+      {/* Search dropdown */}
       {isOpen && query.trim() !== "" && (
         <div className="absolute left-0 right-0 top-full mt-2 z-50 rounded-2xl border border-border bg-card shadow-2xl overflow-hidden">
           {isLoading && allBooks.length === 0 ? (
@@ -202,7 +202,7 @@ export function SearchBar({ onSearchSubmit }: SearchBarProps = {}) {
             </div>
           ) : results.length > 0 ? (
             <div className="flex flex-col">
-              {/* হেডার */}
+              {/* Dropdown header */}
               <div className="flex items-center justify-between px-6 py-3 border-b border-border/60 bg-muted/30 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                 <span className="flex items-center gap-1.5">
                   <BookOpen className="w-3.5 h-3.5 text-primary" />
@@ -213,7 +213,7 @@ export function SearchBar({ onSearchSubmit }: SearchBarProps = {}) {
                 </span>
               </div>
 
-              {/* বইয়ের তালিকা */}
+              {/* Book list */}
               <div className="max-h-80 overflow-y-auto divide-y divide-border/40 scrollbar-thin  flex flex-col">
                 {results.map((book, idx) => (
                   <button
@@ -270,7 +270,7 @@ export function SearchBar({ onSearchSubmit }: SearchBarProps = {}) {
                 ))}
               </div>
 
-              {/* ফুটার: সমস্ত ফলাফল দেখার বাটন */}
+              {/* View all */}
               <button
                 type="button"
                 onClick={handleSearchAll}

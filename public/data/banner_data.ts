@@ -30,7 +30,7 @@ export const BANNER_SLIDES: BannerSlide[] = [
     buttonText: "Explore the Shelves",
     buttonHref: "/books",
     imageUrl:
-      "https://ik.imagekit.io/muhammadsakib/Assignment-08/B_02.jpg",
+      "https://ik.imagekit.io/muhammadsakib/Assignment-08/B_02.jpg?updatedAt=1793751399828",
     imageAlt:
       "Reader gently taking a book directly from a wooden library shelf",
   },
@@ -41,8 +41,7 @@ export const BANNER_SLIDES: BannerSlide[] = [
       "Check your return dates anytime from your account. When you finish reading, simply place the book back on the shelf for the next reader.",
     buttonText: "Join the Library",
     buttonHref: "/register",
-    imageUrl:
-      "https://ik.imagekit.io/muhammadsakib/Assignment-08/B_03.jpg",
+    imageUrl: "https://ik.imagekit.io/muhammadsakib/Assignment-08/B_03.jpg",
     imageAlt:
       "Neatly stacked books on a wooden table ready for the next reader",
   },
