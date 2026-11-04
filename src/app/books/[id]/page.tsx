@@ -49,6 +49,11 @@ export default function BookDetailsPage() {
         ]);
 
         setBook(bookData);
+        if (bookData?.title) {
+          document.title = `BookNook | ${bookData.title}`;
+        } else {
+          document.title = "BookNook | Book Details";
+        }
 
         if (allBooks && allBooks.length > 0) {
           const others = allBooks.filter((b) => b._id !== bookId);

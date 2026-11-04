@@ -60,6 +60,10 @@ function BorrowBookThumbnail({
 }
 
 export default function MyBorrowsPage() {
+  useEffect(() => {
+    document.title = "BookNook | My Borrows";
+  }, []);
+
   const [borrows, setBorrows] = useState<BorrowRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");

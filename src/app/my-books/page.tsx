@@ -30,6 +30,10 @@ export default function MyBooksPage() {
   const { data: session } = useSession();
   const userId = session?.user?.id;
 
+  useEffect(() => {
+    document.title = "BookNook | My Books";
+  }, []);
+
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");

@@ -4,11 +4,12 @@
 
 import { ArrowLeft, CheckCircle2, PlusCircle, Sparkles } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { BookCard } from "@/components/books/BookCard";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { useSession } from "@/lib/auth-client";
 import { createBook } from "@/services/create/createBook";
 import type { Book } from "@/types/book";
 import {
@@ -17,6 +18,12 @@ import {
 } from "../../../public/data/book_categories";
 
 export default function AddBookPage() {
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    document.title = "BookNook | Add Book";
+  }, []);
+
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [category, setCategory] = useState("Fiction");
@@ -192,6 +199,41 @@ export default function AddBookPage() {
                       required
                       className="w-full h-11 px-3.5 rounded-xl border border-border bg-background text-sm text-foreground outline-none focus:border-primary transition-colors"
                     />
+                  </div>
+
+                  {/* Added By (Read-Only User Info) */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <label
+                        htmlFor="addedByName"
+                        className="block text-xs font-bold uppercase tracking-wider text-muted-foreground"
+                      >
+                        User Name (Read-Only)
+                      </label>
+                      <input
+                        id="addedByName"
+                        type="text"
+                        value={session?.user?.name || "Library Member"}
+                        readOnly
+                        className="w-full h-11 px-3.5 rounded-xl border border-border bg-muted/40 text-sm text-muted-foreground cursor-not-allowed select-none"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label
+                        htmlFor="addedByEmail"
+                        className="block text-xs font-bold uppercase tracking-wider text-muted-foreground"
+                      >
+                        User Email (Read-Only)
+                      </label>
+                      <input
+                        id="addedByEmail"
+                        type="email"
+                        value={session?.user?.email || "member@booknook.com"}
+                        readOnly
+                        className="w-full h-11 px-3.5 rounded-xl border border-border bg-muted/40 text-sm text-muted-foreground cursor-not-allowed select-none"
+                      />
+                    </div>
                   </div>
 
                   {/* Author and Category */}

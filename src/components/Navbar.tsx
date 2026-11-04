@@ -4,10 +4,19 @@
 import { cn } from "cn";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "@/lib/auth-client";
 import { navItems } from "../../public/data/nav_data";
 
 export function Navbar() {
   const pathname = usePathname();
+  const { data: session } = useSession();
+
+  const visibleItems = navItems.filter((item) => {
+    if (["/add-book", "/my-books", "/my-borrows"].includes(item.href)) {
+      return Boolean(session?.user);
+    }
+    return true;
+  });
 
   return (
     <nav className="sticky top-0 z-40 mb-5 hidden w-full border-b border-border bg-white  backdrop-blur-xs transition-colors lg:block shadow-2xl shadow-white">
@@ -16,7 +25,7 @@ export function Navbar() {
 
         <div className="flex h-12 items-center justify-center">
           <ul className="flex items-center gap-8 lg:gap-10">
-            {navItems.map((item) => {
+            {visibleItems.map((item) => {
               const isActive =
                 item.href === "/"
                   ? pathname === "/"

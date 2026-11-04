@@ -1,9 +1,14 @@
 // Completed
 
+import type { Metadata } from "next";
 import { Banner } from "@/components/banner";
 import { RecentBooksShowcase } from "@/components/books/RecentBooksShowcase";
 import { LiterarySpotlight } from "@/components/home/LiterarySpotlight";
 import { ReadingPerks } from "@/components/home/ReadingPerks";
+
+export const metadata: Metadata = {
+  title: "Home",
+};
 
 export default function Home() {
   return (

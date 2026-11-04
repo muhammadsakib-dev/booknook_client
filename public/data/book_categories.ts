@@ -23,13 +23,16 @@ export const PRESET_COVERS = [
 
 export const CATEGORIES = [
   "Fiction",
-  "Non-Fiction",
+  "Science",
+  "History",
+  "Kids",
+  "Others",
   "Sci-Fi",
+  "Non-Fiction",
   "Mystery",
   "Technology",
   "Self-Help",
   "Biography",
-  "History",
   "Philosophy",
   "Romance",
   "Fantasy",

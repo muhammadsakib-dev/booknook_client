@@ -33,6 +33,11 @@ function BooksContent() {
   const [sortBy, setSortBy] = useState("default");
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Set title
+  useEffect(() => {
+    document.title = "BookNook | All Books";
+  }, []);
+
   // Fetch books
   useEffect(() => {
     getBooks().then(setBooks);

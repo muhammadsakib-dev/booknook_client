@@ -25,6 +25,13 @@ export function MobileNavSheet() {
   const [open, setOpen] = useState(false);
   const { data: session } = useSession();
 
+  const visibleItems = navItems.filter((item) => {
+    if (["/add-book", "/my-books", "/my-borrows"].includes(item.href)) {
+      return Boolean(session?.user);
+    }
+    return true;
+  });
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger
@@ -62,7 +69,7 @@ export function MobileNavSheet() {
               Navigation
             </h4>
             <nav className="flex flex-col space-y-1">
-              {navItems.map((item) => {
+              {visibleItems.map((item) => {
                 const isActive =
                   item.href === "/"
                     ? pathname === "/"

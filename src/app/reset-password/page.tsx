@@ -5,7 +5,7 @@
 import { AlertCircle, CheckCircle2, Lock } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Logo } from "@/components/header/Logo";
 import { Button } from "@/components/ui/button";
 import { resetPassword } from "@/lib/auth-client";
@@ -14,6 +14,10 @@ function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+
+  useEffect(() => {
+    document.title = "BookNook | Reset Password";
+  }, []);
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");

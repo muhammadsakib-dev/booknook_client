@@ -5,6 +5,7 @@
 import {
   AlertCircle,
   ArrowLeft,
+  Camera,
   Check,
   Lock,
   Mail,
@@ -14,7 +15,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Logo } from "@/components/header/Logo";
 import { Button } from "@/components/ui/button";
 import { signIn, signUp } from "@/lib/auth-client";
@@ -24,8 +25,13 @@ function RegisterForm() {
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/";
 
+  useEffect(() => {
+    document.title = "BookNook | Register";
+  }, []);
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [photoUrl, setPhotoUrl] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -65,12 +71,13 @@ function RegisterForm() {
         name: name.trim(),
         email: email.trim().toLowerCase(),
         password,
+        image: photoUrl.trim() || undefined,
       });
 
       if (res?.error) {
         setErrorMsg(res.error.message || "Failed to create account.");
       } else {
-        router.push(redirectUrl);
+        router.push("/login?registered=true");
         router.refresh();
       }
     } catch (err) {
@@ -205,6 +212,26 @@ function RegisterForm() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="reader@booknook.com"
               required
+              className="w-full h-11 pl-10 pr-3 rounded-xl border border-border bg-background text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-1.5">
+          <label
+            htmlFor="photoUrl"
+            className="block text-xs font-semibold text-foreground"
+          >
+            Photo URL (Optional)
+          </label>
+          <div className="relative">
+            <Camera className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input
+              id="photoUrl"
+              type="url"
+              value={photoUrl}
+              onChange={(e) => setPhotoUrl(e.target.value)}
+              placeholder="https://images.unsplash.com/..."
               className="w-full h-11 pl-10 pr-3 rounded-xl border border-border bg-background text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors"
             />
           </div>

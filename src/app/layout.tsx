@@ -13,7 +13,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "BookNook",
+  title: {
+    default: "BookNook | A Small Online Library",
+    template: "BookNook | %s",
+  },
   description: "Your modern online bookstore and book sharing platform",
 };
 

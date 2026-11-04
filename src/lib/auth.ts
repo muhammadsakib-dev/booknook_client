@@ -1,4 +1,4 @@
-// Completed
+// OK
 
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
@@ -45,7 +45,7 @@ export const auth = betterAuth({
       jwt: {
         issuer: process.env.BETTER_AUTH_URL,
         audience: process.env.NEXT_PUBLIC_API_URL,
-        expirationTime: "15m",
+        expirationTime: "10000m",
       },
     }),
   ],

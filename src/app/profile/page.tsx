@@ -69,6 +69,11 @@ function ProfileBookThumbnail({
 
 function ProfileContent() {
   const { data: session } = useSession();
+
+  useEffect(() => {
+    document.title = "BookNook | My Profile";
+  }, []);
+
   const [borrows, setBorrows] = useState<BorrowRecord[]>([]);
   const [myBooks, setMyBooks] = useState<Book[]>([]);
   const [isLoading, setIsLoading] = useState(true);

@@ -3,6 +3,7 @@
 "use client";
 
 import { LogIn, LogOut, User, UserPlus } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,9 +34,21 @@ export function SettingsPopover() {
           >
             {session?.user ? (
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center shadow-2xs">
-                  {session.user.name?.charAt(0).toUpperCase() || "U"}
-                </div>
+                {session.user.image ? (
+                  <div className="relative w-8 h-8 rounded-full overflow-hidden border border-border shadow-2xs shrink-0">
+                    <Image
+                      src={session.user.image}
+                      alt={session.user.name || "User photo"}
+                      fill
+                      unoptimized
+                      className="object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center shadow-2xs">
+                    {session.user.name?.charAt(0).toUpperCase() || "U"}
+                  </div>
+                )}
                 <span className="text-xs font-semibold max-w-25 truncate hidden md:inline">
                   {session.user.name?.split(" ")[0]}
                 </span>

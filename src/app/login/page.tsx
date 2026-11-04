@@ -2,10 +2,17 @@
 
 "use client";
 
-import { AlertCircle, ArrowLeft, Lock, LogIn, Mail } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowLeft,
+  CheckCircle2,
+  Lock,
+  LogIn,
+  Mail,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Logo } from "@/components/header/Logo";
 import { Button } from "@/components/ui/button";
 import { signIn } from "@/lib/auth-client";
@@ -14,6 +21,11 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/";
+  const isRegistered = searchParams.get("registered") === "true";
+
+  useEffect(() => {
+    document.title = "BookNook | Login";
+  }, []);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -86,6 +98,13 @@ function LoginForm() {
           Sign in to access your borrowed books and library dashboard
         </p>
       </div>
+
+      {isRegistered && !errorMsg && (
+        <div className="p-3.5 mb-6 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs flex items-center gap-2 font-medium">
+          <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-500" />
+          <span>Account created successfully! Please sign in below.</span>
+        </div>
+      )}
 
       {errorMsg && (
         <div className="p-3.5 mb-6 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs flex items-center gap-2">

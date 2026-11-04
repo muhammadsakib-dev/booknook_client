@@ -10,12 +10,16 @@ import {
   Mail,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Logo } from "@/components/header/Logo";
 import { Button } from "@/components/ui/button";
 import { forgetPassword } from "@/lib/auth-client";
 
 export default function ForgotPasswordPage() {
+  useEffect(() => {
+    document.title = "BookNook | Forgot Password";
+  }, []);
+
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
