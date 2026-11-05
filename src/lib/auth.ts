@@ -4,8 +4,9 @@ import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { jwt } from "better-auth/plugins";
 import { MongoClient } from "mongodb";
+import { demoResetTokens } from "./demo-tokens";
 
-// Reuse MongoClient in development to prevent connection exhaustion
+export { demoResetTokens };
 const uri = (process.env.MONGODB_URI ||
   process.env.MONGODB_URL ||
   process.env.NEXT_PUBLIC_MONGODB_URI ||
@@ -18,8 +19,7 @@ const googleClientId = (process.env.GOOGLE_CLIENT_ID || "") as string;
 const googleClientSecret = (process.env.GOOGLE_CLIENT_SECRET || "") as string;
 const isGoogleEnabled = Boolean(googleClientId && googleClientSecret);
 
-// In-memory store for demo reset tokens
-export const demoResetTokens = new Map<string, string>();
+// Initialize BetterAuth instance
 
 export const auth = betterAuth({
   baseURL:

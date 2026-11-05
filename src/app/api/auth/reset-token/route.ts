@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { demoResetTokens } from "@/lib/auth";
+import { demoResetTokens } from "@/lib/demo-tokens";
 
 export const dynamic = "force-dynamic";
 
