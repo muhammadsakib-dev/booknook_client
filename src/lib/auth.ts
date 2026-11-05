@@ -2,6 +2,7 @@
 
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
+import { nextCookies } from "better-auth/next-js";
 import { jwt } from "better-auth/plugins";
 import { MongoClient } from "mongodb";
 import { demoResetTokens } from "./demo-tokens";
@@ -30,6 +31,11 @@ export const auth = betterAuth({
     protocol: process.env.NODE_ENV === "development" ? "http" : "https",
     fallback: "https://booknook-client-gamma-five.vercel.app",
   },
+  trustedOrigins: [
+    "http://localhost:3000",
+    "https://booknook-client-gamma-five.vercel.app",
+    "https://*.vercel.app",
+  ],
   advanced: {
     trustedProxyHeaders: true,
   },
@@ -57,6 +63,9 @@ export const auth = betterAuth({
   },
   plugins: [
     jwt({
+      jwks: {
+        disablePrivateKeyEncryption: true,
+      },
       jwt: {
         issuer:
           process.env.NODE_ENV === "production"
@@ -71,5 +80,6 @@ export const auth = betterAuth({
         expirationTime: "10000m",
       },
     }),
+    nextCookies(),
   ],
 });
