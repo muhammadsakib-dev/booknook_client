@@ -14,7 +14,7 @@ import {
 import { signOut, useSession } from "@/lib/auth-client";
 
 export function SettingsPopover() {
-  const { data: session } = useSession();
+  const { data: session, isPending } = useSession();
 
   const handleLogout = async () => {
     await signOut();
@@ -32,7 +32,9 @@ export function SettingsPopover() {
             className="flex items-center gap-2 text-foreground hover:text-primary transition-colors cursor-pointer max-sm:hidden h-12 px-2.5 rounded-xl border border-transparent hover:border-border"
             aria-label="Reader account settings"
           >
-            {session?.user ? (
+            {isPending ? (
+              <div className="w-8 h-8 rounded-full bg-muted/60 animate-pulse border border-border/40 shrink-0" />
+            ) : session?.user ? (
               <div className="flex items-center gap-2">
                 {session.user.image ? (
                   <div className="relative w-8 h-8 rounded-full overflow-hidden border border-border shadow-2xs shrink-0">
@@ -68,7 +70,11 @@ export function SettingsPopover() {
             Reader Account
           </h4>
           <div className="flex flex-col space-y-1.5 text-sm">
-            {session?.user ? (
+            {isPending ? (
+              <div className="py-4 text-center text-xs text-muted-foreground animate-pulse">
+                Verifying account...
+              </div>
+            ) : session?.user ? (
               <>
                 <Link
                   href="/profile"

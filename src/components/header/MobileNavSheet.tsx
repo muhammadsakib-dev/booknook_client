@@ -23,7 +23,7 @@ import { navItems } from "../../../public/data/nav_data";
 export function MobileNavSheet() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const { data: session } = useSession();
+  const { data: session, isPending } = useSession();
 
   const visibleItems = navItems;
 
@@ -97,7 +97,11 @@ export function MobileNavSheet() {
               Account
             </h4>
             <div className="flex flex-col space-y-2 text-sm px-2">
-              {session?.user ? (
+              {isPending ? (
+                <div className="py-2 text-xs text-muted-foreground animate-pulse">
+                  Verifying account...
+                </div>
+              ) : session?.user ? (
                 <>
                   <Link
                     href="/profile"

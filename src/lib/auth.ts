@@ -26,14 +26,13 @@ const getAuthBaseUrl = () => {
   if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
     return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
   }
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`;
+  if (process.env.NODE_ENV === "production") {
+    return "https://booknook-client-gamma-five.vercel.app";
   }
   return "http://localhost:3000";
 };
 
 const authBaseUrl = getAuthBaseUrl();
-const isHttps = authBaseUrl.startsWith("https://");
 
 // Initialize BetterAuth instance
 export const auth = betterAuth({
@@ -48,15 +47,9 @@ export const auth = betterAuth({
     process.env.BETTER_AUTH_URL || "",
     process.env.APP_URL || "",
   ].filter(Boolean),
-  advanced: {
-    useSecureCookies: isHttps,
-    defaultCookieAttributes: {
-      sameSite: "lax",
-      secure: isHttps,
-      httpOnly: true,
-    },
-  },
-  database: mongodbAdapter(db),
+  database: mongodbAdapter(db, {
+    client,
+  }),
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 6,
