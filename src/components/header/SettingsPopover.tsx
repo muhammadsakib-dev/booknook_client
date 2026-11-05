@@ -29,7 +29,7 @@ export function SettingsPopover() {
           <Button
             variant="ghost"
             type="button"
-            className="flex items-center gap-2 text-foreground hover:text-primary transition-colors cursor-pointer max-sm:hidden h-12 px-2.5 rounded-xl border border-transparent hover:border-border"
+            className="flex items-center gap-2 text-foreground hover:text-primary transition-colors cursor-pointer h-12 px-2.5 rounded-xl border border-transparent hover:border-border"
             aria-label="Reader account settings"
           >
             {isPending ? (

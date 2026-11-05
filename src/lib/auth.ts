@@ -19,35 +19,21 @@ const googleClientId = (process.env.GOOGLE_CLIENT_ID || "") as string;
 const googleClientSecret = (process.env.GOOGLE_CLIENT_SECRET || "") as string;
 const isGoogleEnabled = Boolean(googleClientId && googleClientSecret);
 
-// Dynamic auth base URL resolution for localhost and production (Vercel)
-const getAuthBaseUrl = () => {
-  if (process.env.NODE_ENV === "production") {
-    const candidate = process.env.BETTER_AUTH_URL || process.env.APP_URL;
-    if (candidate && !candidate.includes("localhost")) {
-      return candidate.replace(/\/+$/, "");
-    }
-    return "https://booknook-client-gamma-five.vercel.app";
-  }
-  return (
-    process.env.BETTER_AUTH_URL ||
-    process.env.APP_URL ||
-    "http://localhost:3000"
-  );
-};
-
-const authBaseUrl = getAuthBaseUrl();
-
 // Initialize BetterAuth instance
 export const auth = betterAuth({
-  baseURL: authBaseUrl,
+  baseURL: {
+    allowedHosts: [
+      "localhost:3000",
+      "booknook-client-gamma-five.vercel.app",
+      "*.vercel.app",
+    ],
+    protocol: process.env.NODE_ENV === "development" ? "http" : "https",
+    fallback: "https://booknook-client-gamma-five.vercel.app",
+  },
+  advanced: {
+    trustedProxyHeaders: true,
+  },
   secret: process.env.BETTER_AUTH_SECRET || "A6aErmnfAplYP1ZxrLMyAPzbsRlzcbTr",
-  trustedOrigins: [
-    "http://localhost:3000",
-    "https://booknook-client-gamma-five.vercel.app",
-    authBaseUrl,
-    process.env.BETTER_AUTH_URL || "",
-    process.env.APP_URL || "",
-  ].filter(Boolean),
   database: mongodbAdapter(db, {
     client,
   }),
@@ -72,7 +58,10 @@ export const auth = betterAuth({
   plugins: [
     jwt({
       jwt: {
-        issuer: authBaseUrl,
+        issuer:
+          process.env.NODE_ENV === "production"
+            ? "https://booknook-client-gamma-five.vercel.app"
+            : "http://localhost:3000",
         audience:
           process.env.API_URL ||
           process.env.NEXT_PUBLIC_API_URL ||

@@ -2,26 +2,13 @@
 
 import { createAuthClient } from "better-auth/react";
 
-const getClientBaseUrl = () => {
-  if (typeof window !== "undefined") {
-    return window.location.origin;
-  }
-  if (process.env.NODE_ENV === "production") {
-    const candidate = process.env.BETTER_AUTH_URL || process.env.APP_URL;
-    if (candidate && !candidate.includes("localhost")) {
-      return candidate.replace(/\/+$/, "");
-    }
-    return "https://booknook-client-gamma-five.vercel.app";
-  }
-  return (
-    process.env.BETTER_AUTH_URL ||
-    process.env.APP_URL ||
-    "http://localhost:3000"
-  );
-};
-
 export const authClient = createAuthClient({
-  baseURL: getClientBaseUrl(),
+  baseURL:
+    typeof window !== "undefined"
+      ? window.location.origin
+      : process.env.NODE_ENV === "production"
+        ? "https://booknook-client-gamma-five.vercel.app"
+        : "http://localhost:3000",
   fetchOptions: {
     credentials: "include",
   },
