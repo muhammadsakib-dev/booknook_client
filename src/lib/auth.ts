@@ -9,21 +9,26 @@ import { MongoClient } from "mongodb";
 const uri = (process.env.MONGODB_URI ||
   process.env.MONGODB_URL ||
   process.env.NEXT_PUBLIC_MONGODB_URI ||
-  "") as string;
+  "mongodb://localhost:27017/assignment-08") as string;
 
 const client = new MongoClient(uri);
 const db = client.db("assignment-08");
 
-const googleClientId = process.env.GOOGLE_CLIENT_ID as string;
-const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET as string;
+const googleClientId = (process.env.GOOGLE_CLIENT_ID || "") as string;
+const googleClientSecret = (process.env.GOOGLE_CLIENT_SECRET || "") as string;
 const isGoogleEnabled = Boolean(googleClientId && googleClientSecret);
 
 // In-memory store for demo reset tokens
 export const demoResetTokens = new Map<string, string>();
 
 export const auth = betterAuth({
-  baseURL: process.env.BETTER_AUTH_URL as string,
-  secret: process.env.BETTER_AUTH_SECRET as string,
+  baseURL:
+    process.env.BETTER_AUTH_URL ||
+    process.env.APP_URL ||
+    "http://localhost:3000",
+  secret:
+    process.env.BETTER_AUTH_SECRET ||
+    "booknook_super_secure_jwt_secret_32_chars_key_2026!",
   database: mongodbAdapter(db),
   emailAndPassword: {
     enabled: true,
