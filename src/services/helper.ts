@@ -2,7 +2,10 @@
 
 import { getAuthToken } from "@/lib/auth-client";
 
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+export const API_BASE_URL =
+  process.env.API_URL ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  "http://localhost:8000";
 
 // Get headers with optional JWT Bearer token
 

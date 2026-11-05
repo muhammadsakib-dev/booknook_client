@@ -2,6 +2,17 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  env: {
+    API_URL:
+      process.env.API_URL ||
+      process.env.NEXT_PUBLIC_API_URL ||
+      "http://localhost:8000",
+    APP_URL:
+      process.env.APP_URL ||
+      process.env.BETTER_AUTH_URL ||
+      process.env.NEXT_PUBLIC_APP_URL ||
+      "http://localhost:3000",
+  },
   reactCompiler: true,
   images: {
     remotePatterns: [

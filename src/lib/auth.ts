@@ -6,7 +6,10 @@ import { jwt } from "better-auth/plugins";
 import { MongoClient } from "mongodb";
 
 // Reuse MongoClient in development to prevent connection exhaustion
-const uri = process.env.NEXT_PUBLIC_MONGODB_URI as string;
+const uri = (process.env.MONGODB_URI ||
+  process.env.MONGODB_URL ||
+  process.env.NEXT_PUBLIC_MONGODB_URI ||
+  "") as string;
 
 const client = new MongoClient(uri);
 const db = client.db("assignment-08");
@@ -43,8 +46,14 @@ export const auth = betterAuth({
   plugins: [
     jwt({
       jwt: {
-        issuer: process.env.BETTER_AUTH_URL,
-        audience: process.env.NEXT_PUBLIC_API_URL,
+        issuer:
+          process.env.BETTER_AUTH_URL ||
+          process.env.APP_URL ||
+          "http://localhost:3000",
+        audience:
+          process.env.API_URL ||
+          process.env.NEXT_PUBLIC_API_URL ||
+          "http://localhost:8000",
         expirationTime: "10000m",
       },
     }),
