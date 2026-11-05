@@ -10,7 +10,7 @@ export { demoResetTokens };
 const uri = (process.env.MONGODB_URI ||
   process.env.MONGODB_URL ||
   process.env.NEXT_PUBLIC_MONGODB_URI ||
-  "mongodb://localhost:27017/assignment-08") as string;
+  "mongodb+srv://assignment_08:0LWjCTAqpWskwG1W@cluster0.p16xpfx.mongodb.net/assignment-08?retryWrites=true&w=majority") as string;
 
 const client = new MongoClient(uri);
 const db = client.db("assignment-08");
@@ -21,15 +21,18 @@ const isGoogleEnabled = Boolean(googleClientId && googleClientSecret);
 
 // Dynamic auth base URL resolution for localhost and production (Vercel)
 const getAuthBaseUrl = () => {
-  if (process.env.BETTER_AUTH_URL) return process.env.BETTER_AUTH_URL;
-  if (process.env.APP_URL) return process.env.APP_URL;
-  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
-    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
-  }
   if (process.env.NODE_ENV === "production") {
+    const candidate = process.env.BETTER_AUTH_URL || process.env.APP_URL;
+    if (candidate && !candidate.includes("localhost")) {
+      return candidate.replace(/\/+$/, "");
+    }
     return "https://booknook-client-gamma-five.vercel.app";
   }
-  return "http://localhost:3000";
+  return (
+    process.env.BETTER_AUTH_URL ||
+    process.env.APP_URL ||
+    "http://localhost:3000"
+  );
 };
 
 const authBaseUrl = getAuthBaseUrl();
@@ -37,9 +40,7 @@ const authBaseUrl = getAuthBaseUrl();
 // Initialize BetterAuth instance
 export const auth = betterAuth({
   baseURL: authBaseUrl,
-  secret:
-    process.env.BETTER_AUTH_SECRET ||
-    "booknook_super_secure_jwt_secret_32_chars_key_2026!",
+  secret: process.env.BETTER_AUTH_SECRET || "A6aErmnfAplYP1ZxrLMyAPzbsRlzcbTr",
   trustedOrigins: [
     "http://localhost:3000",
     "https://booknook-client-gamma-five.vercel.app",
@@ -75,7 +76,9 @@ export const auth = betterAuth({
         audience:
           process.env.API_URL ||
           process.env.NEXT_PUBLIC_API_URL ||
-          "http://localhost:8000",
+          (process.env.NODE_ENV === "production"
+            ? "https://booksnook-backend.vercel.app"
+            : "http://localhost:8000"),
         expirationTime: "10000m",
       },
     }),
