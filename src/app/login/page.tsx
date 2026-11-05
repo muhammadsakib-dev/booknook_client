@@ -11,14 +11,13 @@ import {
   Mail,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { Logo } from "@/components/header/Logo";
 import { Button } from "@/components/ui/button";
 import { signIn } from "@/lib/auth-client";
 
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/";
   const isRegistered = searchParams.get("registered") === "true";
@@ -46,8 +45,7 @@ function LoginForm() {
       if (res?.error) {
         setErrorMsg(res.error.message || "Invalid email or password.");
       } else {
-        router.push(redirectUrl);
-        router.refresh();
+        window.location.href = redirectUrl;
       }
     } catch (err) {
       setErrorMsg(

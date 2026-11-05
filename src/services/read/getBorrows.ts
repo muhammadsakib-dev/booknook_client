@@ -7,6 +7,9 @@ export async function getBorrows(): Promise<BorrowRecord[]> {
   try {
     const headers = await getAuthHeaders();
     const res = await fetch(`${API_BASE_URL}/borrows`, { headers });
+    if (!res.ok) {
+      return [];
+    }
     const json = await res.json();
     return json.data || [];
   } catch (error) {

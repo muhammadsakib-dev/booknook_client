@@ -25,12 +25,7 @@ export function MobileNavSheet() {
   const [open, setOpen] = useState(false);
   const { data: session } = useSession();
 
-  const visibleItems = navItems.filter((item) => {
-    if (["/add-book", "/my-books", "/my-borrows"].includes(item.href)) {
-      return Boolean(session?.user);
-    }
-    return true;
-  });
+  const visibleItems = navItems;
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
