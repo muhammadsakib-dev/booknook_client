@@ -14,8 +14,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { BookCard } from "@/components/books/BookCard";
 import { Button } from "@/components/ui/button";
+import { normalizeBook } from "@/lib/book-utils";
 import { getBooks } from "@/services/read/getBooks";
-import { type Book, normalizeBook } from "@/types/book";
+import type { Book } from "@/types/book";
 
 const BOOKS_PER_PAGE = 8;
 
@@ -38,9 +39,17 @@ function BooksContent() {
     document.title = "BookNook | All Books";
   }, []);
 
-  // Fetch books
+  // Fetch books & sync with global inventory updates
   useEffect(() => {
-    getBooks().then(setBooks);
+    const loadBooks = () => {
+      getBooks().then(setBooks);
+    };
+
+    loadBooks();
+    window.addEventListener("booknook:inventory-updated", loadBooks);
+    return () => {
+      window.removeEventListener("booknook:inventory-updated", loadBooks);
+    };
   }, []);
 
   // Sync URL category

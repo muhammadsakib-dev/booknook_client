@@ -1,22 +1,15 @@
-// Completed
-
 import { getAuthToken } from "@/lib/auth-client";
 
-const getApiBaseUrl = () => {
-  const url = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL;
-  if (process.env.NODE_ENV === "production") {
-    if (url && !url.includes("localhost")) {
-      return url.replace(/\/+$/, "");
-    }
-    return "https://booksnook-backend.vercel.app";
-  }
-  return url || "http://localhost:8000";
-};
+export const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  process.env.API_URL ||
+  (process.env.NODE_ENV === "production"
+    ? "https://booksnook-backend.vercel.app"
+    : "http://localhost:8000");
 
-export const API_BASE_URL = getApiBaseUrl();
-
-// Get headers with optional JWT Bearer token
-
+/**
+ * Returns authorization headers with JWT Bearer token if user session is active.
+ */
 export async function getAuthHeaders(): Promise<HeadersInit> {
   const token = await getAuthToken();
   return {
@@ -25,4 +18,12 @@ export async function getAuthHeaders(): Promise<HeadersInit> {
   };
 }
 
-export function notifyInventoryUpdated(): void {}
+/**
+ * Emits a global inventory update event to synchronize book copies across
+ * Showcase, Catalog, and Book Details pages in real time.
+ */
+export function notifyInventoryUpdated(): void {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("booknook:inventory-updated"));
+  }
+}

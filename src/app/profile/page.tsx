@@ -449,11 +449,16 @@ function ProfileContent() {
                         <div className="flex items-center gap-3 mt-1.5 text-[11px] text-muted-foreground">
                           <span>
                             Borrowed:{" "}
-                            {new Date(record.borrowedAt).toLocaleDateString()}
+                            {record.borrowedAt
+                              ? new Date(record.borrowedAt).toLocaleDateString()
+                              : "Pending approval"}
                           </span>
                           <span>•</span>
                           <span>
-                            Due: {new Date(record.dueDate).toLocaleDateString()}
+                            Due:{" "}
+                            {record.dueDate
+                              ? new Date(record.dueDate).toLocaleDateString()
+                              : "TBD"}
                           </span>
                         </div>
                       </div>

@@ -5,7 +5,9 @@ import type { Book } from "@/types/book";
 
 export async function getBookById(id: string): Promise<Book | null> {
   try {
-    const res = await fetch(`${API_BASE_URL}/books/${id}`);
+    const res = await fetch(`${API_BASE_URL}/books/${id}`, {
+      cache: "no-store",
+    });
     const json = await res.json();
     return json.data || null;
   } catch (error) {

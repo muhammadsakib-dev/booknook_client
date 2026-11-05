@@ -9,8 +9,9 @@ import Link from "next/link";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { normalizeBook } from "@/lib/book-utils";
 import { useCart } from "@/providers/cart-provider";
-import { type Book, normalizeBook } from "@/types/book";
+import type { Book } from "@/types/book";
 
 interface BookCardProps {
   book: Book;

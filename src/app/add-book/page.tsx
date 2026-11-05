@@ -11,11 +11,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useSession } from "@/lib/auth-client";
 import { createBook } from "@/services/create/createBook";
+import { getBooks } from "@/services/read/getBooks";
 import type { Book } from "@/types/book";
-import {
-  CATEGORIES,
-  PRESET_COVERS,
-} from "../../../public/data/book_categories";
 
 export default function AddBookPage() {
   const { data: session } = useSession();
@@ -27,14 +24,41 @@ export default function AddBookPage() {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [category, setCategory] = useState("Fiction");
+  const [dbCategories, setDbCategories] = useState<string[]>([]);
   const [copies, setCopies] = useState(5);
   const [rating, setRating] = useState(4.8);
-  const [image, setImage] = useState(PRESET_COVERS[0].url);
+  const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [createdBook, setCreatedBook] = useState<Book | null>(null);
+
+  // Fetch categories dynamically from database books
+  useEffect(() => {
+    getBooks().then((books) => {
+      const uniqueCats = Array.from(
+        new Set(
+          books
+            .map((b) => b.category?.trim())
+            .filter((c): c is string => Boolean(c)),
+        ),
+      ).sort();
+
+      if (uniqueCats.length > 0) {
+        setDbCategories(uniqueCats);
+        setCategory((prev) => (prev ? prev : uniqueCats[0]));
+      } else {
+        setDbCategories([
+          "Fiction",
+          "Non-Fiction",
+          "Science",
+          "History",
+          "Technology",
+        ]);
+      }
+    });
+  }, []);
 
   // Simple
   const handleSubmit = async (e: React.FormEvent) => {
@@ -75,10 +99,10 @@ export default function AddBookPage() {
   const handleResetForm = () => {
     setTitle("");
     setAuthor("");
-    setCategory("Fiction");
+    setCategory(dbCategories[0] || "Fiction");
     setCopies(5);
     setRating(4.8);
-    setImage(PRESET_COVERS[0].url);
+    setImage("");
     setDescription("");
     setCreatedBook(null);
     setErrorMsg(null);
@@ -92,7 +116,9 @@ export default function AddBookPage() {
     category,
     rating,
     copies,
+    totalCopies: copies,
     availableCopies: copies,
+    status: "available",
     image,
     description:
       description ||
@@ -261,7 +287,7 @@ export default function AddBookPage() {
                         htmlFor="category"
                         className="block text-xs font-bold uppercase tracking-wider text-muted-foreground"
                       >
-                        Category
+                        Category *
                       </label>
                       <select
                         id="category"
@@ -269,7 +295,7 @@ export default function AddBookPage() {
                         onChange={(e) => setCategory(e.target.value)}
                         className="w-full h-11 px-3 rounded-xl border border-border bg-background text-sm text-foreground outline-none focus:border-primary transition-colors cursor-pointer"
                       >
-                        {CATEGORIES.map((cat) => (
+                        {dbCategories.map((cat) => (
                           <option key={cat} value={cat}>
                             {cat}
                           </option>
@@ -319,7 +345,7 @@ export default function AddBookPage() {
                     </div>
                   </div>
 
-                  {/* Cover Image URL and Sample Button */}
+                  {/* Cover Image URL */}
                   <div className="space-y-1.5">
                     <label
                       htmlFor="image"
@@ -335,26 +361,6 @@ export default function AddBookPage() {
                       placeholder="https://images.unsplash.com/..."
                       className="w-full h-11 px-3.5 rounded-xl border border-border bg-background text-sm text-foreground outline-none focus:border-primary transition-colors"
                     />
-
-                    <div className="pt-1 flex flex-wrap items-center gap-1.5">
-                      <span className="text-xs text-muted-foreground mr-1">
-                        Preset:
-                      </span>
-                      {PRESET_COVERS.map((preset) => (
-                        <button
-                          key={preset.label}
-                          type="button"
-                          onClick={() => setImage(preset.url)}
-                          className={`text-xs px-2.5 py-1 rounded-md border transition-colors cursor-pointer ${
-                            image === preset.url
-                              ? "border-primary bg-primary/10 text-primary font-semibold"
-                              : "border-border hover:bg-muted text-muted-foreground"
-                          }`}
-                        >
-                          {preset.label}
-                        </button>
-                      ))}
-                    </div>
                   </div>
 
                   {/* Description */}

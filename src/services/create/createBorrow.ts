@@ -1,6 +1,10 @@
 // Completed
 
-import { API_BASE_URL, getAuthHeaders } from "@/services/helper";
+import {
+  API_BASE_URL,
+  getAuthHeaders,
+  notifyInventoryUpdated,
+} from "@/services/helper";
 
 export async function createBorrow(
   items: Array<{ bookId: string; quantity: number }>,
@@ -13,6 +17,9 @@ export async function createBorrow(
       body: JSON.stringify({ items }),
     });
     const json = await res.json();
+    if (res.ok) {
+      notifyInventoryUpdated();
+    }
     return {
       success: res.ok,
       message: json.message || "Borrow confirmed successfully!",

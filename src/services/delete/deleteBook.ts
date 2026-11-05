@@ -1,6 +1,10 @@
 // Completed
 
-import { API_BASE_URL, getAuthHeaders } from "@/services/helper";
+import {
+  API_BASE_URL,
+  getAuthHeaders,
+  notifyInventoryUpdated,
+} from "@/services/helper";
 
 export async function deleteBook(id: string) {
   try {
@@ -10,6 +14,9 @@ export async function deleteBook(id: string) {
       headers,
     });
     const json = await res.json();
+    if (res.ok) {
+      notifyInventoryUpdated();
+    }
     return {
       success: res.ok,
       message: json.message || "Book deleted successfully!",

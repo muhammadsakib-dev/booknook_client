@@ -1,6 +1,10 @@
 // Completed
 
-import { API_BASE_URL, getAuthHeaders } from "@/services/helper";
+import {
+  API_BASE_URL,
+  getAuthHeaders,
+  notifyInventoryUpdated,
+} from "@/services/helper";
 import type { Book } from "@/types/book";
 
 export async function createBook(bookData: Partial<Book>) {
@@ -12,6 +16,9 @@ export async function createBook(bookData: Partial<Book>) {
       body: JSON.stringify(bookData),
     });
     const json = await res.json();
+    if (res.ok) {
+      notifyInventoryUpdated();
+    }
     return {
       success: res.ok,
       book: json.data,

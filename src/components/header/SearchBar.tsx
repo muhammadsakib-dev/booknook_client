@@ -10,8 +10,9 @@ import {
   useRef,
   useState,
 } from "react";
+import { normalizeBook } from "@/lib/book-utils";
 import { getBooks } from "@/services/read/getBooks";
-import { type NormalizedBook, normalizeBook } from "@/types/book";
+import type { NormalizedBook } from "@/types/book";
 import { SearchDropdown } from "./search/SearchDropdown";
 import { SearchInput } from "./search/SearchInput";
 

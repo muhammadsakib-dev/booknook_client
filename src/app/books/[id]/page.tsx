@@ -10,9 +10,12 @@ import {
   Check,
   Clock,
   Layers,
+  Mail,
   Minus,
   Plus,
+  ShieldAlert,
   Star,
+  UserCheck,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -21,12 +24,15 @@ import { useEffect, useState } from "react";
 import { BookCard } from "@/components/books/BookCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useSession } from "@/lib/auth-client";
+import { normalizeBook } from "@/lib/book-utils";
 import { useCart } from "@/providers/cart-provider";
 import { getBookById } from "@/services/read/getBookById";
 import { getBooks } from "@/services/read/getBooks";
-import { type Book, normalizeBook } from "@/types/book";
+import type { Book } from "@/types/book";
 
 export default function BookDetailsPage() {
+  const { data: session } = useSession();
   const params = useParams();
   const router = useRouter();
   const bookId = (params?.id as string) || "";
@@ -75,6 +81,10 @@ export default function BookDetailsPage() {
     }
 
     loadData();
+    window.addEventListener("booknook:inventory-updated", loadData);
+    return () => {
+      window.removeEventListener("booknook:inventory-updated", loadData);
+    };
   }, [bookId]);
 
   if (loading) {
@@ -107,6 +117,11 @@ export default function BookDetailsPage() {
   }
 
   const item = normalizeBook(book);
+  const isOwner = Boolean(
+    session?.user?.id &&
+      book?.ownerUserId &&
+      session.user.id === book.ownerUserId,
+  );
 
   const handleAddToCart = () => {
     if (!item.isAvailable || item.availableCopies <= 0) return;
@@ -227,6 +242,34 @@ export default function BookDetailsPage() {
                 </div>
               </div>
 
+              {/* বই আপলোডকারী / কন্ট্রিবিউটর তথ্য */}
+              <div className="mb-6 p-4 rounded-2xl border border-border/80 bg-muted/20 flex items-center justify-between flex-wrap gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm shrink-0">
+                    {(book.addedByName || "C").charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <div className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                      <UserCheck className="w-3.5 h-3.5 text-primary" />
+                      <span>Uploaded by Contributor</span>
+                    </div>
+                    <div className="text-sm font-bold text-foreground">
+                      {book.addedByName || "BookNook Central Library"}
+                    </div>
+                  </div>
+                </div>
+
+                {book.addedByEmail && (
+                  <a
+                    href={`mailto:${book.addedByEmail}`}
+                    className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline bg-background px-3 py-1.5 rounded-lg border border-border"
+                  >
+                    <Mail className="w-3.5 h-3.5" />
+                    <span>{book.addedByEmail}</span>
+                  </a>
+                )}
+              </div>
+
               {/* সারসংক্ষেপ */}
               <div className="mb-8">
                 <h2 className="text-xs font-bold text-foreground uppercase tracking-wider mb-2">
@@ -240,63 +283,78 @@ export default function BookDetailsPage() {
 
             {/* পরিমাণ ও ধার নেওয়ার বাটন */}
             <div className="pt-6 border-t border-border flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-              {item.isAvailable && (
-                <div className="flex items-center border border-border rounded-xl bg-background overflow-hidden h-11 w-fit px-1">
-                  <button
-                    type="button"
-                    disabled={quantity <= 1}
-                    onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                    className="w-9 h-9 flex items-center justify-center hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer rounded-lg disabled:opacity-30 disabled:cursor-not-allowed"
-                    aria-label="Decrease copies"
-                  >
-                    <Minus className="w-4 h-4" />
-                  </button>
-                  <span className="w-10 text-center text-sm font-bold text-foreground select-none">
-                    {quantity}
+              {isOwner ? (
+                <div className="flex-1 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400 text-xs font-semibold flex items-center gap-2.5">
+                  <ShieldAlert className="w-4 h-4 shrink-0 text-amber-600 dark:text-amber-400" />
+                  <span>
+                    You uploaded this book to the library. You cannot borrow
+                    your own contributed book.
                   </span>
-                  <button
-                    type="button"
-                    disabled={quantity >= item.availableCopies}
-                    onClick={() =>
-                      setQuantity((q) => Math.min(item.availableCopies, q + 1))
-                    }
-                    className="w-9 h-9 flex items-center justify-center hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer rounded-lg disabled:opacity-30 disabled:cursor-not-allowed"
-                    aria-label="Increase copies"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </button>
                 </div>
-              )}
+              ) : (
+                <>
+                  {item.isAvailable && (
+                    <div className="flex items-center border border-border rounded-xl bg-background overflow-hidden h-11 w-fit px-1">
+                      <button
+                        type="button"
+                        disabled={quantity <= 1}
+                        onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                        className="w-9 h-9 flex items-center justify-center hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer rounded-lg disabled:opacity-30 disabled:cursor-not-allowed"
+                        aria-label="Decrease copies"
+                      >
+                        <Minus className="w-4 h-4" />
+                      </button>
+                      <span className="w-10 text-center text-sm font-bold text-foreground select-none">
+                        {quantity}
+                      </span>
+                      <button
+                        type="button"
+                        disabled={quantity >= item.availableCopies}
+                        onClick={() =>
+                          setQuantity((q) =>
+                            Math.min(item.availableCopies, q + 1),
+                          )
+                        }
+                        className="w-9 h-9 flex items-center justify-center hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer rounded-lg disabled:opacity-30 disabled:cursor-not-allowed"
+                        aria-label="Increase copies"
+                      >
+                        <Plus className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )}
 
-              <Button
-                size="lg"
-                disabled={!item.isAvailable}
-                onClick={handleAddToCart}
-                className={cn(
-                  "flex-1 h-11 rounded-xl text-sm font-semibold shadow-xs transition-all flex items-center justify-center gap-2",
-                  !item.isAvailable
-                    ? "bg-muted text-muted-foreground cursor-not-allowed hover:bg-muted"
-                    : isAdded
-                      ? "bg-emerald-600 hover:bg-emerald-600 text-white cursor-pointer"
-                      : "bg-primary hover:bg-primary-hover text-primary-foreground cursor-pointer",
-                )}
-              >
-                {!item.isAvailable ? (
-                  <span>Currently Unavailable</span>
-                ) : isAdded ? (
-                  <>
-                    <Check className="w-4 h-4 stroke-[2.5]" />
-                    <span>Added to Borrow Bag!</span>
-                  </>
-                ) : (
-                  <>
-                    <BookMarked className="w-4 h-4 stroke-2" />
-                    <span>
-                      Borrow {quantity > 1 ? `(${quantity} Copies)` : "Book"}
-                    </span>
-                  </>
-                )}
-              </Button>
+                  <Button
+                    size="lg"
+                    disabled={!item.isAvailable}
+                    onClick={handleAddToCart}
+                    className={cn(
+                      "flex-1 h-11 rounded-xl text-sm font-semibold shadow-xs transition-all flex items-center justify-center gap-2",
+                      !item.isAvailable
+                        ? "bg-muted text-muted-foreground cursor-not-allowed hover:bg-muted"
+                        : isAdded
+                          ? "bg-emerald-600 hover:bg-emerald-600 text-white cursor-pointer"
+                          : "bg-primary hover:bg-primary-hover text-primary-foreground cursor-pointer",
+                    )}
+                  >
+                    {!item.isAvailable ? (
+                      <span>Currently Unavailable</span>
+                    ) : isAdded ? (
+                      <>
+                        <Check className="w-4 h-4 stroke-[2.5]" />
+                        <span>Added to Borrow Bag!</span>
+                      </>
+                    ) : (
+                      <>
+                        <BookMarked className="w-4 h-4 stroke-2" />
+                        <span>
+                          Borrow{" "}
+                          {quantity > 1 ? `(${quantity} Copies)` : "Book"}
+                        </span>
+                      </>
+                    )}
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>

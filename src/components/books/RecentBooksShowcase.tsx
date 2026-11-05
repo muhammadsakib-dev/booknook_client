@@ -16,10 +16,18 @@ export function RecentBooksShowcase() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getBooks().then((data) => {
-      setBooks(data);
-      setLoading(false);
-    });
+    const loadData = () => {
+      getBooks().then((data) => {
+        setBooks(data);
+        setLoading(false);
+      });
+    };
+
+    loadData();
+    window.addEventListener("booknook:inventory-updated", loadData);
+    return () => {
+      window.removeEventListener("booknook:inventory-updated", loadData);
+    };
   }, []);
 
   // Sort by latest createdAt and take first 6 books
@@ -29,7 +37,7 @@ export function RecentBooksShowcase() {
         new Date(b.createdAt || 0).getTime() -
         new Date(a.createdAt || 0).getTime(),
     )
-    .slice(0, 6);
+    .slice(0, 8);
 
   return (
     <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
