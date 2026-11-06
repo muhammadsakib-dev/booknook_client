@@ -8,11 +8,11 @@ import {
   BookOpen,
   CheckCircle2,
   Clock,
+  Mail,
   RotateCcw,
   Search,
   Sparkles,
   User,
-  Mail,
   XCircle,
 } from "lucide-react";
 import Image from "next/image";
@@ -393,15 +393,13 @@ export default function MyBorrowsPage() {
                                 {item.ownerName && (
                                   <p className="text-[11px] text-primary/80 mt-1 flex items-center gap-1 font-medium">
                                     <User className="w-3 h-3 shrink-0" />
-                                    <span>Contributor: {item.ownerName}</span> 
-                                    
+                                    <span>Contributor: {item.ownerName}</span>
                                   </p>
                                 )}
                                 {item.ownerName && (
                                   <p className="text-[11px] text-primary/80 mt-1 flex items-center gap-1 font-medium">
                                     <Mail className="w-3 h-3 shrink-0" />
-                                    <span>Mail: {item.ownerEmail}</span> 
-                                    
+                                    <span>Mail: {item.ownerEmail}</span>
                                   </p>
                                 )}
                               </div>

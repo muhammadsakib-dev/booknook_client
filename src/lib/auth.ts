@@ -9,8 +9,7 @@ import { demoResetTokens } from "./demo-tokens";
 
 export { demoResetTokens };
 
-
-const mongodbUri =process.env.MONGODB_URI as string;
+const mongodbUri = process.env.MONGODB_URI as string;
 
 const client = new MongoClient(mongodbUri);
 const dbName = process.env.DB_NAME;
