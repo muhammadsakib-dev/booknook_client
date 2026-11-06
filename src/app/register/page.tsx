@@ -18,6 +18,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { Logo } from "@/components/header/Logo";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/sonner";
 import { signIn, signUp } from "@/lib/auth-client";
 
 function RegisterForm() {
@@ -48,19 +49,24 @@ function RegisterForm() {
     setErrorMsg(null);
 
     if (!name.trim()) {
-      setErrorMsg("Please enter your full name.");
+      const msg = "Please enter your full name.";
+      setErrorMsg(msg);
+      toast.error(msg);
       return;
     }
 
     if (!isPasswordValid) {
-      setErrorMsg(
-        "Password must be at least 6 characters with uppercase and lowercase letters.",
-      );
+      const msg =
+        "Password must be at least 6 characters with uppercase and lowercase letters.";
+      setErrorMsg(msg);
+      toast.error(msg);
       return;
     }
 
     if (password !== confirmPassword) {
-      setErrorMsg("Passwords do not match.");
+      const msg = "Passwords do not match.";
+      setErrorMsg(msg);
+      toast.error(msg);
       return;
     }
 
@@ -75,17 +81,21 @@ function RegisterForm() {
       });
 
       if (res?.error) {
-        setErrorMsg(res.error.message || "Failed to create account.");
+        const msg = res.error.message || "Failed to create account.";
+        setErrorMsg(msg);
+        toast.error(msg);
       } else {
+        toast.success("Account created successfully! Please sign in.");
         router.push("/login?registered=true");
         router.refresh();
       }
     } catch (err) {
-      setErrorMsg(
+      const msg =
         err instanceof Error
           ? err.message
-          : "Registration failed. Please try again.",
-      );
+          : "Registration failed. Please try again.";
+      setErrorMsg(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

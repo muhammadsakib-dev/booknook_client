@@ -26,6 +26,7 @@ import { useEffect, useState } from "react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { toast } from "@/components/ui/sonner";
 import { useSession } from "@/lib/auth-client";
 import { normalizeBook } from "@/lib/book-utils";
 import { deleteBook } from "@/services/delete/deleteBook";
@@ -108,12 +109,6 @@ export default function MyBooksPage() {
   // ডিলিট স্টেট
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [toastMsg, setToastMsg] = useState<string | null>(null);
-
-  const showToast = (msg: string) => {
-    setToastMsg(msg);
-    setTimeout(() => setToastMsg(null), 3500);
-  };
 
   // আপলোডকৃত বই তালিকা লোড করা
   const loadBooks = async () => {
@@ -168,7 +163,7 @@ export default function MyBooksPage() {
     setRequestActionId(null);
 
     if (res.success) {
-      showToast("Borrow request approved! The loan is now active.");
+      toast.success("Borrow request approved! The loan is now active.");
       setRequests((prev) =>
         prev.map((r) =>
           r._id === id
@@ -185,7 +180,7 @@ export default function MyBooksPage() {
       );
       loadBooks();
     } else {
-      showToast(res.message || "Failed to approve borrow request.");
+      toast.error(res.message || "Failed to approve borrow request.");
     }
   };
 
@@ -198,7 +193,7 @@ export default function MyBooksPage() {
     setRequestActionId(null);
 
     if (res.success) {
-      showToast(
+      toast.success(
         "Borrow request declined. The reserved copy has been restored.",
       );
       setRequests((prev) =>
@@ -214,7 +209,7 @@ export default function MyBooksPage() {
       );
       loadBooks();
     } else {
-      showToast(res.message || "Failed to decline request.");
+      toast.error(res.message || "Failed to decline request.");
     }
   };
 
@@ -227,7 +222,7 @@ export default function MyBooksPage() {
     setRequestActionId(null);
 
     if (res.success) {
-      showToast("Book return confirmed! Inventory copy restored.");
+      toast.success("Book return confirmed! Inventory copy restored.");
       setRequests((prev) =>
         prev.map((r) =>
           r._id === id
@@ -241,7 +236,7 @@ export default function MyBooksPage() {
       );
       loadBooks();
     } else {
-      showToast(res.message || "Failed to confirm return.");
+      toast.error(res.message || "Failed to confirm return.");
     }
   };
 
@@ -317,11 +312,11 @@ export default function MyBooksPage() {
     setIsUpdating(false);
 
     if (res.success) {
-      showToast("Book updated successfully!");
+      toast.success("Book updated successfully!");
       loadBooks();
       setEditingBook(null);
     } else {
-      showToast(res.message || "Failed to update book.");
+      toast.error(res.message || "Failed to update book.");
     }
   };
 
@@ -333,11 +328,11 @@ export default function MyBooksPage() {
     setIsDeleting(false);
 
     if (res.success) {
-      showToast("Book deleted from library!");
+      toast.success("Book deleted from library!");
       setBooks((prev) => prev.filter((b) => b._id !== deletingId));
       setDeletingId(null);
     } else {
-      showToast(res.message || "Cannot delete book while loans are active.");
+      toast.error(res.message || "Cannot delete book while loans are active.");
       setDeletingId(null);
     }
   };
@@ -346,14 +341,6 @@ export default function MyBooksPage() {
     <ProtectedRoute>
       <div className="min-h-screen bg-background py-8 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* টোস্ট নোটিফিকেশন */}
-          {toastMsg && (
-            <div className="fixed bottom-6 right-6 z-50 bg-primary text-primary-foreground px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 text-xs font-semibold animate-in fade-in slide-in-from-bottom-2">
-              <Check className="w-4 h-4" />
-              <span>{toastMsg}</span>
-            </div>
-          )}
-
           {/* 1. ব্রেডক্রাম্ব */}
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
             <Link

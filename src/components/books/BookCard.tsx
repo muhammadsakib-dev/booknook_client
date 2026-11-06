@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/sonner";
 import { normalizeBook } from "@/lib/book-utils";
 import { useCart } from "@/providers/cart-provider";
 import type { Book } from "@/types/book";
@@ -23,11 +24,17 @@ export function BookCard({ book }: BookCardProps) {
   const [isAdded, setIsAdded] = useState(false);
 
   const handleBorrow = () => {
-    if (!item.isAvailable) return;
+    if (!item.isAvailable || item.availableCopies <= 0) {
+      toast.error(`"${item.title}" is currently out of stock`);
+      return;
+    }
     const ok = addToCart(item);
     if (ok !== false) {
       setIsAdded(true);
+      toast.success(`"${item.title}" added to your borrow bag!`);
       setTimeout(() => setIsAdded(false), 1600);
+    } else {
+      toast.error(`Could not add "${item.title}" to borrow bag`);
     }
   };
 

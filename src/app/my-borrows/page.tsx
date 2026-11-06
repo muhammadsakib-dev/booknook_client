@@ -6,13 +6,13 @@ import {
   AlertCircle,
   ArrowLeft,
   BookOpen,
-  Check,
   CheckCircle2,
   Clock,
   RotateCcw,
   Search,
   Sparkles,
   User,
+  Mail,
   XCircle,
 } from "lucide-react";
 import Image from "next/image";
@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { toast } from "@/components/ui/sonner";
 import { getBorrows } from "@/services/read/getBorrows";
 import { rejectBorrow, requestReturn } from "@/services/update/borrowApproval";
 import type { BorrowRecord } from "@/types/book";
@@ -48,7 +49,7 @@ function BorrowBookThumbnail({
   }, [src]);
 
   return (
-    <div className="w-12 h-16 sm:w-14 sm:h-20 rounded-lg overflow-hidden shrink-0 bg-muted border border-border/60 shadow-2xs relative aspect-[3/4]">
+    <div className="w-12 h-16 sm:w-14 sm:h-20 rounded-lg overflow-hidden shrink-0 bg-muted border border-border/60 shadow-2xs relative aspect-3/4">
       <Image
         src={imgSrc}
         alt={alt}
@@ -74,12 +75,6 @@ export default function MyBorrowsPage() {
     "all" | "pending" | "active" | "return-pending" | "returned"
   >("all");
   const [actionId, setActionId] = useState<string | null>(null);
-  const [toastMsg, setToastMsg] = useState<string | null>(null);
-
-  const showToast = (msg: string) => {
-    setToastMsg(msg);
-    setTimeout(() => setToastMsg(null), 3500);
-  };
 
   // ধার করা বই তালিকা লোড করা
   const loadBorrows = async () => {
@@ -112,7 +107,7 @@ export default function MyBorrowsPage() {
     setActionId(null);
 
     if (res.success) {
-      showToast(
+      toast.success(
         "Return submitted! Waiting for the book contributor to confirm receipt.",
       );
       setBorrows((prev) =>
@@ -127,7 +122,7 @@ export default function MyBorrowsPage() {
         ),
       );
     } else {
-      showToast(res.message || "Failed to submit return request.");
+      toast.error(res.message || "Failed to submit return request.");
     }
   };
 
@@ -140,7 +135,9 @@ export default function MyBorrowsPage() {
     setActionId(null);
 
     if (res.success) {
-      showToast("Borrow request cancelled. The reserved copy has been freed.");
+      toast.success(
+        "Borrow request cancelled. The reserved copy has been freed.",
+      );
       setBorrows((prev) =>
         prev.map((item) =>
           item._id === id
@@ -153,7 +150,7 @@ export default function MyBorrowsPage() {
         ),
       );
     } else {
-      showToast(res.message || "Failed to cancel request.");
+      toast.error(res.message || "Failed to cancel request.");
     }
   };
 
@@ -191,14 +188,6 @@ export default function MyBorrowsPage() {
     <ProtectedRoute>
       <div className="min-h-screen bg-background py-8 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* টোস্ট নোটিফিকেশন */}
-          {toastMsg && (
-            <div className="fixed bottom-6 right-6 z-50 bg-primary text-primary-foreground px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 text-xs font-semibold animate-in fade-in slide-in-from-bottom-2">
-              <Check className="w-4 h-4" />
-              <span>{toastMsg}</span>
-            </div>
-          )}
-
           {/* 1. ব্রেডক্রাম্ব */}
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
             <Link
@@ -377,12 +366,7 @@ export default function MyBorrowsPage() {
                         item.status === "Rejected" ||
                         item.status === "Cancelled";
 
-                      const rawImage =
-                        item.bookImage ||
-                        (item as { image?: string }).image ||
-                        (item as { coverImage?: string }).coverImage ||
-                        (item as { imageUrl?: string }).imageUrl ||
-                        (item as { cover_image?: string }).cover_image;
+                      const rawImage = item.bookImage || DEFAULT_BOOK_COVER;
                       const bookTitle = item.bookTitle || "Borrowed Book";
 
                       return (
@@ -392,7 +376,7 @@ export default function MyBorrowsPage() {
                         >
                           {/* Book & Contributor */}
                           <td className="py-3.5 px-4">
-                            <div className="flex items-center gap-3.5 min-w-[240px]">
+                            <div className="flex items-center gap-3.5 min-w-60">
                               <BorrowBookThumbnail
                                 src={rawImage}
                                 alt={bookTitle}
@@ -409,7 +393,15 @@ export default function MyBorrowsPage() {
                                 {item.ownerName && (
                                   <p className="text-[11px] text-primary/80 mt-1 flex items-center gap-1 font-medium">
                                     <User className="w-3 h-3 shrink-0" />
-                                    <span>Contributor: {item.ownerName}</span>
+                                    <span>Contributor: {item.ownerName}</span> 
+                                    
+                                  </p>
+                                )}
+                                {item.ownerName && (
+                                  <p className="text-[11px] text-primary/80 mt-1 flex items-center gap-1 font-medium">
+                                    <Mail className="w-3 h-3 shrink-0" />
+                                    <span>Mail: {item.ownerEmail}</span> 
+                                    
                                   </p>
                                 )}
                               </div>

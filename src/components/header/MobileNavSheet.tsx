@@ -17,6 +17,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { toast } from "@/components/ui/sonner";
 import { signOut, useSession } from "@/lib/auth-client";
 import { navItems } from "../../../public/data/nav_data";
 
@@ -125,6 +126,7 @@ export function MobileNavSheet() {
                     type="button"
                     onClick={async () => {
                       setOpen(false);
+                      toast.success("Signed out successfully.");
                       await signOut();
                       window.location.reload();
                     }}

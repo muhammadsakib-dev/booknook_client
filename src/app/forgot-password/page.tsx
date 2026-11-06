@@ -13,6 +13,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/header/Logo";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/sonner";
 import { forgetPassword } from "@/lib/auth-client";
 
 export default function ForgotPasswordPage() {
@@ -39,9 +40,10 @@ export default function ForgotPasswordPage() {
       });
 
       if (res?.error) {
-        setErrorMsg(
-          res.error.message || "Failed to process request. Please try again.",
-        );
+        const msg =
+          res.error.message || "Failed to process request. Please try again.";
+        setErrorMsg(msg);
+        toast.error(msg);
         setLoading(false);
         return;
       }
@@ -60,12 +62,14 @@ export default function ForgotPasswordPage() {
       }
 
       setIsSuccess(true);
+      toast.success("Password reset link generated!");
     } catch (err) {
-      setErrorMsg(
+      const msg =
         err instanceof Error
           ? err.message
-          : "An unexpected error occurred. Please try again.",
-      );
+          : "An unexpected error occurred. Please try again.";
+      setErrorMsg(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

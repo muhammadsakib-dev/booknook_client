@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { Logo } from "@/components/header/Logo";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/sonner";
 import { resetPassword } from "@/lib/auth-client";
 
 function ResetPasswordForm() {
@@ -31,24 +32,31 @@ function ResetPasswordForm() {
 
     // পাসওয়ার্ড ভ্যালিডেশন
     if (!token) {
-      setErrorMsg("Missing or invalid reset token. Please request a new link.");
+      const msg = "Missing or invalid reset token. Please request a new link.";
+      setErrorMsg(msg);
+      toast.error(msg);
       return;
     }
 
     if (newPassword.length < 6) {
-      setErrorMsg("Password must be at least 6 characters long.");
+      const msg = "Password must be at least 6 characters long.";
+      setErrorMsg(msg);
+      toast.error(msg);
       return;
     }
 
     if (!/[A-Z]/.test(newPassword) || !/[a-z]/.test(newPassword)) {
-      setErrorMsg(
-        "Password must contain at least one uppercase and one lowercase letter.",
-      );
+      const msg =
+        "Password must contain at least one uppercase and one lowercase letter.";
+      setErrorMsg(msg);
+      toast.error(msg);
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setErrorMsg("Passwords do not match. Please verify.");
+      const msg = "Passwords do not match. Please verify.";
+      setErrorMsg(msg);
+      toast.error(msg);
       return;
     }
 
@@ -61,24 +69,27 @@ function ResetPasswordForm() {
       });
 
       if (res?.error) {
-        setErrorMsg(
+        const msg =
           res.error.message ||
-            "Failed to reset password. The token may be expired.",
-        );
+          "Failed to reset password. The token may be expired.";
+        setErrorMsg(msg);
+        toast.error(msg);
         setLoading(false);
         return;
       }
 
       setIsSuccess(true);
+      toast.success("Password reset successfully! Redirecting to login...");
       setTimeout(() => {
         router.push("/login");
       }, 2500);
     } catch (err) {
-      setErrorMsg(
+      const msg =
         err instanceof Error
           ? err.message
-          : "An error occurred while resetting password.",
-      );
+          : "An error occurred while resetting password.";
+      setErrorMsg(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

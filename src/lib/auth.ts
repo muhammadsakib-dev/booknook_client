@@ -9,63 +9,53 @@ import { demoResetTokens } from "./demo-tokens";
 
 export { demoResetTokens };
 
-/**
- * MongoDB Database Configuration
- * Strictly driven by environment variables to prevent secret leakage.
- * A safe local loopback address is provided as fallback during build-time module evaluation.
- */
-const mongodbUri =
-  process.env.MONGODB_URI ||
-  process.env.MONGODB_URL ||
-  "mongodb://127.0.0.1:27017/assignment-08";
+
+const mongodbUri =process.env.MONGODB_URI as string;
 
 const client = new MongoClient(mongodbUri);
-const dbName = process.env.DB_NAME || "assignment-08";
+const dbName = process.env.DB_NAME;
 const db = client.db(dbName);
 
 /**
  * BetterAuth Secret & Environment Settings
  */
 const authSecret = process.env.BETTER_AUTH_SECRET || process.env.AUTH_SECRET;
-const isProduction = process.env.NODE_ENV === "production";
 
 const googleClientId = process.env.GOOGLE_CLIENT_ID || "";
 const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET || "";
 const isGoogleEnabled = Boolean(googleClientId && googleClientSecret);
 
-const appUrl =
-  process.env.APP_URL ||
-  process.env.BETTER_AUTH_URL ||
-  (isProduction
-    ? "https://booknook-client-gamma-five.vercel.app"
-    : "http://localhost:3000");
+const appUrl = process.env.APP_URL || "http://localhost:3000";
+const apiUrl = process.env.API_URL || "http://localhost:8000";
 
-const apiUrl =
-  process.env.API_URL ||
-  process.env.NEXT_PUBLIC_API_URL ||
-  (isProduction
-    ? "https://booksnook-backend.vercel.app"
-    : "http://localhost:8000");
+let appHost = "localhost:3000";
+try {
+  appHost = new URL(appUrl).host;
+} catch {
+  // fallback to localhost
+}
+
+const allowedHosts = Array.from(
+  new Set(["localhost:3000", appHost, "*.vercel.app"]),
+);
+
+const trustedOrigins = Array.from(
+  new Set([
+    "http://localhost:3000",
+    appUrl,
+    "https://*.vercel.app",
+    ...(apiUrl ? [apiUrl] : []),
+  ]),
+);
 
 // Initialize BetterAuth instance
 export const auth = betterAuth({
   baseURL: {
-    allowedHosts: [
-      "localhost:3000",
-      "booknook-client-gamma-five.vercel.app",
-      "*.vercel.app",
-    ],
-    protocol: isProduction ? "https" : "http",
+    allowedHosts,
+    protocol: appUrl.startsWith("https") ? "https" : "http",
     fallback: appUrl,
   },
-  trustedOrigins: Array.from(
-    new Set([
-      "http://localhost:3000",
-      "https://booknook-client-gamma-five.vercel.app",
-      "https://*.vercel.app",
-      ...(appUrl ? [appUrl] : []),
-    ]),
-  ),
+  trustedOrigins,
   advanced: {
     trustedProxyHeaders: true,
   },

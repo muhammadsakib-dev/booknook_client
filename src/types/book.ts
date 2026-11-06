@@ -12,8 +12,6 @@ export interface Book {
   status: string;
   copies?: number;
   available?: boolean;
-  pages?: number;
-  publishedYear?: number | string;
   ownerUserId?: string;
   addedByName?: string;
   addedByEmail?: string;

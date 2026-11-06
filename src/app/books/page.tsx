@@ -75,38 +75,45 @@ function BooksContent() {
     router.replace("/books");
   };
 
+  // Pre-normalize books once for fast filtering and sorting
+  const items = books.map((b) => ({
+    book: b,
+    normalized: normalizeBook(b),
+  }));
+
   // Build categories
   const categories = [
     "All",
     ...Array.from(
-      new Set(books.map((b) => normalizeBook(b).category).filter(Boolean)),
+      new Set(items.map((i) => i.normalized.category).filter(Boolean)),
     ),
   ];
 
   // Filter and sort
-  const filteredBooks = books
-    .filter((b) => {
-      const item = normalizeBook(b);
-      const q = search.trim().toLowerCase();
+  const q = search.trim().toLowerCase();
+  const filteredBooks = items
+    .filter(({ normalized }) => {
       const matchesSearch =
         !q ||
-        item.title.toLowerCase().includes(q) ||
-        item.author.toLowerCase().includes(q) ||
-        item.category.toLowerCase().includes(q);
+        normalized.title.toLowerCase().includes(q) ||
+        normalized.author.toLowerCase().includes(q) ||
+        normalized.category.toLowerCase().includes(q);
       const matchesCategory =
-        selectedCategory === "All" || item.category === selectedCategory;
+        selectedCategory === "All" || normalized.category === selectedCategory;
       return matchesSearch && matchesCategory;
     })
     .sort((a, b) => {
-      const itemA = normalizeBook(a);
-      const itemB = normalizeBook(b);
       if (sortBy === "copies-desc")
-        return itemB.availableCopies - itemA.availableCopies;
+        return b.normalized.availableCopies - a.normalized.availableCopies;
       if (sortBy === "available")
-        return (itemB.isAvailable ? 1 : 0) - (itemA.isAvailable ? 1 : 0);
-      if (sortBy === "rating") return itemB.rating - itemA.rating;
+        return (
+          (b.normalized.isAvailable ? 1 : 0) -
+          (a.normalized.isAvailable ? 1 : 0)
+        );
+      if (sortBy === "rating") return b.normalized.rating - a.normalized.rating;
       return 0;
-    });
+    })
+    .map((i) => i.book);
 
   // Calculate pagination
   const totalPages = Math.ceil(filteredBooks.length / BOOKS_PER_PAGE);

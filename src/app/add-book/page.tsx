@@ -9,6 +9,7 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { BookCard } from "@/components/books/BookCard";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { toast } from "@/components/ui/sonner";
 import { useSession } from "@/lib/auth-client";
 import { createBook } from "@/services/create/createBook";
 import { getBooks } from "@/services/read/getBooks";
@@ -66,7 +67,9 @@ export default function AddBookPage() {
     setErrorMsg(null);
 
     if (!title.trim() || !author.trim()) {
-      setErrorMsg("Please enter both title and author.");
+      const msg = "Please enter both title and author.";
+      setErrorMsg(msg);
+      toast.error(msg);
       return;
     }
 
@@ -90,8 +93,11 @@ export default function AddBookPage() {
 
     if (res.success && res.book) {
       setCreatedBook(res.book);
+      toast.success("Book successfully added to the library catalog!");
     } else {
-      setErrorMsg(res.message || "Failed to add book.");
+      const msg = res.message || "Failed to add book.";
+      setErrorMsg(msg);
+      toast.error(msg);
     }
   };
 

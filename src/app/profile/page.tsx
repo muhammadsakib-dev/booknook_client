@@ -25,6 +25,7 @@ import { useEffect, useState } from "react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { toast } from "@/components/ui/sonner";
 import { signOut, useSession } from "@/lib/auth-client";
 import { getBorrows } from "@/services/read/getBorrows";
 import { getMyBooks } from "@/services/read/getMyBooks";
@@ -109,6 +110,7 @@ function ProfileContent() {
   }, [user?.id]);
 
   const handleLogout = async () => {
+    toast.success("Signed out successfully.");
     await signOut();
     window.location.href = "/";
   };
@@ -421,13 +423,7 @@ function ProfileContent() {
             ) : borrows.length > 0 ? (
               <div className="divide-y divide-border/60">
                 {borrows.slice(0, 4).map((record) => {
-                  const recordImg =
-                    record.bookImage ||
-                    (record as { image?: string }).image ||
-                    (record as { coverImage?: string }).coverImage ||
-                    (record as { imageUrl?: string }).imageUrl ||
-                    (record as { cover_image?: string }).cover_image ||
-                    "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=800";
+                  const recordImg = record.bookImage || DEFAULT_BOOK_COVER;
 
                   return (
                     <div

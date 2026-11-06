@@ -24,6 +24,7 @@ import { useEffect, useState } from "react";
 import { BookCard } from "@/components/books/BookCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/sonner";
 import { useSession } from "@/lib/auth-client";
 import { normalizeBook } from "@/lib/book-utils";
 import { useCart } from "@/providers/cart-provider";
@@ -124,11 +125,25 @@ export default function BookDetailsPage() {
   );
 
   const handleAddToCart = () => {
-    if (!item.isAvailable || item.availableCopies <= 0) return;
+    if (isOwner) {
+      toast.warning(
+        "You are the contributor of this book and cannot borrow it.",
+      );
+      return;
+    }
+    if (!item.isAvailable || item.availableCopies <= 0) {
+      toast.error("This book has no available copies for loan.");
+      return;
+    }
     const ok = addToCart(item, quantity);
     if (ok !== false) {
       setIsAdded(true);
+      toast.success(
+        `${quantity} copy(ies) of "${item.title}" added to your borrow bag!`,
+      );
       setTimeout(() => setIsAdded(false), 2000);
+    } else {
+      toast.error(`Could not add "${item.title}" to borrow bag.`);
     }
   };
 

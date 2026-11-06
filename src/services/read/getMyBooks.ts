@@ -1,4 +1,4 @@
-// Completed
+// Perfect
 
 import { API_BASE_URL } from "@/services/helper";
 import type { Book } from "@/types/book";
@@ -6,7 +6,7 @@ import type { Book } from "@/types/book";
 export async function getMyBooks(userId: string): Promise<Book[]> {
   try {
     const res = await fetch(`${API_BASE_URL}/books?ownerUserId=${userId}`, {
-      cache: "force-cache",
+      cache: "no-store",
     });
     if (!res.ok) {
       return [];

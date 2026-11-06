@@ -1,11 +1,6 @@
 import { getAuthToken } from "@/lib/auth-client";
 
-export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  process.env.API_URL ||
-  (process.env.NODE_ENV === "production"
-    ? "https://booksnook-backend.vercel.app"
-    : "http://localhost:8000");
+export const API_BASE_URL = process.env.API_URL || "http://localhost:8000";
 
 /**
  * Returns authorization headers with JWT Bearer token if user session is active.

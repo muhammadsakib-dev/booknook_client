@@ -29,27 +29,33 @@ export function SearchBar({ onSearchSubmit }: SearchBarProps = {}) {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Lazy load books on mount
+  // Lazy load books on mount & subscribe to live inventory updates
   useEffect(() => {
     let isMounted = true;
     setIsLoading(true);
 
-    getBooks()
-      .then((raw) => {
-        if (isMounted) {
-          setAllBooks(raw.map(normalizeBook));
-          setIsLoading(false);
-        }
-      })
-      .catch((err) => {
-        console.error("Failed to fetch books for search:", err);
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      });
+    const loadData = () => {
+      getBooks()
+        .then((raw) => {
+          if (isMounted) {
+            setAllBooks(raw.map(normalizeBook));
+            setIsLoading(false);
+          }
+        })
+        .catch((err) => {
+          console.error("Failed to fetch books for search:", err);
+          if (isMounted) {
+            setIsLoading(false);
+          }
+        });
+    };
+
+    loadData();
+    window.addEventListener("booknook:inventory-updated", loadData);
 
     return () => {
       isMounted = false;
+      window.removeEventListener("booknook:inventory-updated", loadData);
     };
   }, []);
 

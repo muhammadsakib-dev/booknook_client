@@ -30,7 +30,7 @@ export function RecentBooksShowcase() {
     };
   }, []);
 
-  // Sort by latest createdAt and take first 6 books
+  // Sort by latest createdAt and take newest additions
   const latestBooks = [...books]
     .sort(
       (a, b) =>
@@ -52,8 +52,8 @@ export function RecentBooksShowcase() {
             Latest Additions to <span className="text-primary">BookNook</span>
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground max-w-xl">
-            Explore our 6 newest cataloged physical books ready for loan. Free
-            to borrow for all registered readers.
+            Explore our newest cataloged physical books ready for loan. Free to
+            borrow for all registered readers.
           </p>
         </div>
 

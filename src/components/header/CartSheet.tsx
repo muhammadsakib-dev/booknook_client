@@ -15,6 +15,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { toast } from "@/components/ui/sonner";
 import { useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/providers/cart-provider";
@@ -50,9 +51,10 @@ export function CartSheet() {
 
     // Require active session
     if (!session?.user) {
-      setErrorMessage(
-        "You must be signed in to borrow books. Please log in to complete your borrow request.",
-      );
+      const msg =
+        "You must be signed in to borrow books. Please log in to complete your borrow request.";
+      setErrorMessage(msg);
+      toast.error(msg);
       return;
     }
 
@@ -69,20 +71,40 @@ export function CartSheet() {
       if (result.success) {
         setIsSuccess(true);
         clearCart();
-      } else {
-        setErrorMessage(
-          result.message || "Failed to complete book borrow request.",
+        toast.success(
+          "Borrow request placed successfully! Awaiting contributor approval.",
         );
+      } else {
+        const errorText =
+          result.message || "Failed to complete book borrow request.";
+        setErrorMessage(errorText);
+        toast.error(errorText);
       }
     } catch (err) {
-      setErrorMessage(
+      const errorText =
         err instanceof Error
           ? err.message
-          : "An unexpected error occurred during borrowing.",
-      );
+          : "An unexpected error occurred during borrowing.";
+      setErrorMessage(errorText);
+      toast.error(errorText);
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleRemoveItem = (bookId: string) => {
+    const item = items.find((i) => i.book.id === bookId);
+    removeFromCart(bookId);
+    toast.info(
+      item?.book.title
+        ? `"${item.book.title}" removed from bag.`
+        : "Book removed from bag.",
+    );
+  };
+
+  const handleClearBag = () => {
+    clearCart();
+    toast.info("Borrow bag cleared.");
   };
 
   return (
@@ -188,7 +210,7 @@ export function CartSheet() {
                   key={item.book.id}
                   item={item}
                   onUpdateQuantity={updateQuantity}
-                  onRemove={removeFromCart}
+                  onRemove={handleRemoveItem}
                 />
               ))
             )}
@@ -201,7 +223,7 @@ export function CartSheet() {
             totalCount={totalCount}
             dueDate={formattedDueDate}
             isSubmitting={isSubmitting}
-            onClear={clearCart}
+            onClear={handleClearBag}
             onConfirm={handleConfirmBorrow}
           />
         )}

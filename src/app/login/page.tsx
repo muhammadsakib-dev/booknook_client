@@ -15,6 +15,7 @@ import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { Logo } from "@/components/header/Logo";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/sonner";
 import { signIn } from "@/lib/auth-client";
 
 function LoginForm() {
@@ -43,16 +44,20 @@ function LoginForm() {
       });
 
       if (res?.error) {
-        setErrorMsg(res.error.message || "Invalid email or password.");
+        const msg = res.error.message || "Invalid email or password.";
+        setErrorMsg(msg);
+        toast.error(msg);
       } else {
+        toast.success("Welcome back! Signed in successfully.");
         window.location.href = redirectUrl;
       }
     } catch (err) {
-      setErrorMsg(
+      const msg =
         err instanceof Error
           ? err.message
-          : "Failed to sign in. Please try again.",
-      );
+          : "Failed to sign in. Please try again.";
+      setErrorMsg(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -69,18 +74,20 @@ function LoginForm() {
       });
 
       if (res?.error) {
-        setErrorMsg(
+        const msg =
           res.error.message ||
-            "Google Sign-In is not configured. Please ensure GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are set in your environment variables.",
-        );
+          "Google Sign-In is not configured. Please ensure GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are set in your environment variables.";
+        setErrorMsg(msg);
+        toast.error(msg);
         setLoading(false);
       }
     } catch (err) {
-      setErrorMsg(
+      const msg =
         err instanceof Error
           ? err.message
-          : "Google Sign-In is not currently available.",
-      );
+          : "Google Sign-In is not currently available.";
+      setErrorMsg(msg);
+      toast.error(msg);
       setLoading(false);
     }
   };

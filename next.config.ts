@@ -1,21 +1,12 @@
+// Confirm by Muhammad Sakib
+
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
   env: {
-    API_URL:
-      process.env.API_URL ||
-      process.env.NEXT_PUBLIC_API_URL ||
-      (process.env.NODE_ENV === "production"
-        ? "https://booksnook-backend.vercel.app"
-        : "http://localhost:8000"),
-    APP_URL:
-      process.env.APP_URL ||
-      process.env.BETTER_AUTH_URL ||
-      process.env.NEXT_PUBLIC_APP_URL ||
-      (process.env.NODE_ENV === "production"
-        ? "https://booknook-client-gamma-five.vercel.app"
-        : "http://localhost:3000"),
+    API_URL: process.env.API_URL || "http://localhost:8000",
+    APP_URL: process.env.APP_URL || "http://localhost:3000",
   },
   reactCompiler: true,
   images: {

@@ -2,7 +2,6 @@
 export { createBook } from "./create/createBook";
 export { createBorrow } from "./create/createBorrow";
 export { deleteBook } from "./delete/deleteBook";
-export { returnBorrow } from "./delete/returnBorrow";
 export { API_BASE_URL, getAuthHeaders, notifyInventoryUpdated } from "./helper";
 export { getBookById } from "./read/getBookById";
 export { getBooks } from "./read/getBooks";

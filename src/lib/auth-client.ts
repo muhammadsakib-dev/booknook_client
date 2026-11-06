@@ -6,11 +6,7 @@ export const authClient = createAuthClient({
   baseURL:
     typeof window !== "undefined"
       ? window.location.origin
-      : process.env.APP_URL ||
-        process.env.NEXT_PUBLIC_APP_URL ||
-        (process.env.NODE_ENV === "production"
-          ? "https://booknook-client-gamma-five.vercel.app"
-          : "http://localhost:3000"),
+      : process.env.APP_URL || "http://localhost:3000",
   fetchOptions: {
     credentials: "include",
   },

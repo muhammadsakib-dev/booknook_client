@@ -4,7 +4,7 @@ import type { Book, NormalizedBook } from "@/types/book";
  * Normalizes a raw Book document for safe and consistent rendering in UI components.
  */
 export function normalizeBook(
-  book: Partial<Book> & { _id: string; id?: string },
+  book: Partial<Book> & { _id?: string; id?: string },
 ): NormalizedBook {
   const total = Number(book.totalCopies ?? book.copies ?? 1);
   const available = Number(book.availableCopies ?? total);
@@ -14,7 +14,7 @@ export function normalizeBook(
     book.status !== "Borrowed";
 
   return {
-    id: book.id || book._id,
+    id: String(book.id || book._id || ""),
     title: book.title || "Untitled Book",
     author: book.author || "Unknown Author",
     image:

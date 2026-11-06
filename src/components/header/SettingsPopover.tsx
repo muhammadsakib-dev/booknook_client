@@ -11,12 +11,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { toast } from "@/components/ui/sonner";
 import { signOut, useSession } from "@/lib/auth-client";
 
 export function SettingsPopover() {
   const { data: session, isPending } = useSession();
 
   const handleLogout = async () => {
+    toast.success("Signed out successfully.");
     await signOut();
     window.location.reload();
   };
