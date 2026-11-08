@@ -40,7 +40,7 @@ export const BANNER_SLIDES: BannerSlide[] = [
     description:
       "Check your return dates anytime from your account. When you finish reading, simply place the book back on the shelf for the next reader.",
     buttonText: "Join the Library",
-    buttonHref: "/register",
+    buttonHref: "/add-book",
     imageUrl: "https://ik.imagekit.io/muhammadsakib/Assignment-08/B_03.jpg",
     imageAlt:
       "Neatly stacked books on a wooden table ready for the next reader",
