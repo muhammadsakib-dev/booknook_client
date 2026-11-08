@@ -16,25 +16,27 @@
 
 1. [🏛️ Architecture & Technologies](#️-architecture--technologies)
 2. [✨ Core Features](#-core-features)
-3. [🔄 Peer-to-Peer (P2P) Lending Lifecycle](#-peer-to-peer-p2p-lending-lifecycle)
-4. [📖 User Guide & How to Use (ব্যবহার বিধি)](#-user-guide--how-to-use-ব্যবহার-বিধি)
-5. [🔔 Toast Notification System](#-toast-notification-system)
-6. [🔐 Authentication & Security](#-authentication--security)
-7. [⚙️ Environment Variables (Unified Setup)](#️-environment-variables-unified-setup)
-8. [🚀 Getting Started Locally](#-getting-started-locally)
-9. [📂 Project Directory Structure](#-project-directory-structure)
+3. [🧩 Modular Component Architecture](#-modular-component-architecture)
+4. [🛡️ Multi-Layer Private Route & Proxy Architecture](#️-multi-layer-private-route--proxy-architecture)
+5. [🔄 Peer-to-Peer (P2P) Lending Lifecycle](#-peer-to-peer-p2p-lending-lifecycle)
+6. [📖 User Guide & How to Use (ব্যবহার বিধি)](#-user-guide--how-to-use-ব্যবহার-বিধি)
+7. [🔔 Toast Notification System](#-toast-notification-system)
+8. [🔐 Authentication & Security](#-authentication--security)
+9. [⚙️ Environment Variables (Unified Setup)](#️-environment-variables-unified-setup)
+10. [🚀 Getting Started Locally](#-getting-started-locally)
+11. [📂 Project Directory Structure](#-project-directory-structure)
 
 ---
 
 ## 🏛️ Architecture & Technologies
 
-BookNook is built with a modern decoupled full-stack architecture pairing a Next.js 16 frontend with an Express 5 REST API and MongoDB Atlas.
+BookNook is built with a decoupled full-stack architecture pairing a Next.js 16 frontend with an Express 5 REST API and MongoDB Atlas.
 
 ### 🎨 Frontend (`booknook_client`)
 
 | Technology | Version | Purpose & Description |
 | :--- | :--- | :--- |
-| **Next.js** | `16.4.3` | React Framework with App Router, Turbopack, and Server/Client Components |
+| **Next.js** | `16.4.3` | React Framework with App Router, Turbopack, Reverse API Proxy, and Server/Client Components |
 | **React** | `19.3.0` | Core UI library powered by the React Compiler (`reactCompiler: true`) |
 | **TypeScript** | `v5` | End-to-end static type safety and interface contracts |
 | **Tailwind CSS** | `v4` | Modern CSS engine with `@theme` brand tokens in `src/app/globals.css` |
@@ -60,9 +62,7 @@ BookNook is built with a modern decoupled full-stack architecture pairing a Next
 ## ✨ Core Features
 
 ### 1. 📚 Public Catalog & Discovery (`/books`)
-- **Real-Time Live Search**: Debounced title, author, and category search with URL synchronization (`/books?search=...`).
-- **Category Filter Tabs**: Dynamic category chips derived directly from live database entries (*Fiction, Non-Fiction, Philosophy, Technology, History, etc.*).
-- **Multi-Criterion Sorting**: Sort by Availability, Rating, Available Copies, or Newest Additions.
+- **Multi-Criterion Sorting**: Sort books by Availability, Highest Rated, Most Copies Available, or Default order.
 - **Client-Side Pagination**: Clean 8-book paginated grid with responsive page navigation.
 - **Stock Indicators**: Real-time badges for *In Stock*, *Low Stock (≤2 copies)*, and *Out of Stock*.
 
@@ -80,7 +80,7 @@ BookNook is built with a modern decoupled full-stack architecture pairing a Next
 
 ### 4. 🤝 Peer-to-Peer (P2P) Lending & Approvals (`/my-books`)
 - **Contributor Dashboard**: Books uploaded by the user with 4 aggregate metrics:
-  - **Total Books**: Contributed catalog titles.
+  - **Total Titles**: Contributed catalog titles.
   - **Total Copies**: Aggregate physical inventory across all titles.
   - **Available Copies**: Copies currently on library shelves ready for loan.
   - **Currently Loaned**: $\text{Total Copies} - \text{Available Copies}$.
@@ -90,18 +90,74 @@ BookNook is built with a modern decoupled full-stack architecture pairing a Next
 - **Return Approvals Tab**: Verify when readers return books in person:
   - **Confirm Return**: Marks loan as `Returned` and increments available copies.
 - **Book Edit Modal**: Update title, author, category, description, and total copies with active-loan lower bound safeguards.
-- **Safe Soft-Deletion**: Permanently blocks deleting books while active or pending loans exist.
+- **Safe Deletion**: Permanently blocks deleting books while active or pending loans exist.
 
 ### 5. 📖 Reader Loans Dashboard (`/my-borrows`)
-- **Status Filter Tabs**: Filter by *All*, *Pending Approval*, *Active Loans*, *Return Pending*, and *Returned*.
+- **Status Filter Tabs**: Filter by *All*, *Pending*, *Active*, *Return Pending*, and *Returned*.
+- **Search Bar**: Search borrowed books by title, author, or contributor name.
 - **Countdown Due Timers**: Real-time visual tracking of loan due dates with *Active*, *Due Today*, or *Overdue* states.
 - **Borrower Actions**:
   - **Cancel Request**: Cancel pending borrow requests before contributor approval, instantly restoring copies.
   - **Request Return**: Initiate book return when ready to return physical copies.
 
-### 6. ⚡ Global Real-Time Inventory Event Bus
-- Custom window event (`booknook:inventory-updated`) emitted across all mutating services (*add, edit, delete, borrow, approve, return*).
-- Automatically revalidates Catalog, Showcase, SearchBar, and Dashboards in real time without hard browser reloads.
+### 6. 👤 User Profile & Activity Hub (`/profile`)
+- **Dynamic Avatar with Gmail Fallback**: Renders user profile picture, automatically queries public avatar via `unavatar.io` for Gmail/email accounts, or falls back to stylized initials.
+- **Reading Activity Summary**: Metric cards for Active Loans, Total Borrowed, Completed, and My Contributions.
+- **Reader Credentials Card**: Displays member status, borrowing quota (up to 3 concurrent books), standard loan period (14 days), and JWT verified badge.
+- **Recent Borrow Activity**: Preview of recent books with real-time loan status badges.
+
+---
+
+## 🧩 Modular Component Architecture
+
+To maintain high maintainability, readability, and performance, large route monoliths were decomposed into clean, single-responsibility sub-components:
+
+| Route Directory | Coordinator | Sub-Components (`components/`) |
+| :--- | :--- | :--- |
+| **`/my-books`** | `MyBooksClient.tsx` (~210 lines) | `BookThumbnail.tsx`, `ContributorHeader.tsx`, `CatalogStats.tsx`, `CatalogTable.tsx`, `RequestsStats.tsx`, `RequestsTable.tsx`, `EditBookModal.tsx`, `DeleteBookModal.tsx` |
+| **`/my-borrows`** | `MyBorrowsClient.tsx` (~160 lines) | `BorrowBookThumbnail.tsx`, `BorrowsHeader.tsx`, `BorrowsFilterBar.tsx`, `BorrowsTable.tsx` |
+| **`/profile`** | `ProfileClient.tsx` (~95 lines) | `ProfileBookThumbnail.tsx`, `ProfileHeader.tsx`, `ProfileStats.tsx`, `AccountDetails.tsx`, `RecentBorrowActivity.tsx` |
+
+All sub-components are cleanly exported via local `index.ts` barrel files.
+
+---
+
+## 🛡️ Multi-Layer Private Route & Proxy Architecture
+
+BookNook utilizes a **3-Layer Defense-in-Depth** security model:
+
+```
+                       [Incoming Request]
+                               │
+    ┌──────────────────────────▼──────────────────────────┐
+    │ 1. Next.js Server Edge Middleware (src/middleware.ts)│ ◄── Instant 307 redirect before page execution
+    └──────────────────────────┬──────────────────────────┘
+                               │
+    ┌──────────────────────────▼──────────────────────────┐
+    │ 2. Client Guard Wrapper (ProtectedRoute.tsx)        │ ◄── Handles session hydration & token expiry
+    └──────────────────────────┬──────────────────────────┘
+                               │
+    ┌──────────────────────────▼──────────────────────────┐
+    │ 3. Express REST API (authenticate.ts)               │ ◄── Cryptographic JWT Bearer verification
+    └─────────────────────────────────────────────────────┘
+```
+
+### Next.js Reverse API Proxy
+Configured in [`next.config.ts`](file:///c:/Project/Assignment-08/booknook_client/next.config.ts):
+```ts
+async rewrites() {
+  const backendUrl = process.env.API_URL || "http://localhost:8000";
+  return [
+    {
+      source: "/api/backend/:path*",
+      destination: `${backendUrl}/:path*`,
+    },
+  ];
+}
+```
+- **Same-Origin Requests**: Browser requests stay strictly same-origin (`/api/backend/...`), eliminating CORS preflight `OPTIONS` requests.
+- **Dual-Environment Resolution**: `API_BASE_URL` resolves to `/api/backend` on the client (browser) and direct `API_URL` during Server Component SSR.
+- **Smart JWT Caching**: Active JWTs are cached in memory with a 30s TTL buffer to eliminate duplicate auth token round-trips across parallel service calls.
 
 ---
 
@@ -140,8 +196,8 @@ stateDiagram-v2
 ## 📖 User Guide & How to Use (ব্যবহার বিধি)
 
 ### ১. বই অনুসন্ধান ও ব্রাউজিং (Browse & Search)
-1. **হেডার সার্চবার**: পৃষ্ঠার শীর্ষে থাকা সার্চবারে বইয়ের নাম, লেখক বা ক্যাটাগরি লিখে দ্রুত ফলাফল দেখুন।
-2. **ক্যাটালগ পেজ (`/books`)**: ফিল্টার চিপস চেপে নির্দিষ্ট ঘরানার বই বা সর্টিং ড্রপডাউন ব্যবহার করে বইয়ের তালিকা দেখুন।
+1. **হেডার সার্চবার**: পৃষ্ঠার শীর্ষে থাকা সার্চবারে বইয়ের নাম, লেখক বা ক্যাটাগরি লিখে দ্রুত ড্রপডাউন ফলাফল দেখুন।
+2. **ক্যাটালগ পেজ (`/books`)**: সর্টিং ড্রপডাউন ব্যবহার করে বইয়ের তালিকা দেখুন ও পেজিনেশন দিয়ে পৃষ্ঠা পরিবর্তন করুন।
 
 ### ২. বই ধার নেওয়ার আবেদন (Requesting a Book Loan)
 1. বইয়ের কার্ডে **"Borrow"** বাটনে অথবা বইয়ের বিস্তারিত পেজে (`/books/[id]`) গিয়ে **"Add to Bag"** চাপুন।
@@ -154,7 +210,7 @@ stateDiagram-v2
 1. আপনি যেসব বই আপলোড করেছেন, সেগুলোর জন্য রিকোয়েস্ট আসলে **`My Books`** পেজের **Incoming Requests** ট্যাবে দেখতে পাবেন।
 2. **Approve**: রিকোয়েস্টটি অনুমোদন করলে বইটির লোন সক্রিয় হবে এবং ১৪ দিনের রিটার্ন মেয়াদ গণনা শুরু হবে।
 3. **Decline**: রিকোয়েস্ট বাতিল করলে সংরক্ষিত কপিটি পুনরায় জনসাধারণের জন্য ক্যাটালগে যুক্ত হবে।
-4. পাঠক বই ফেরত দিতে চাইলে তা **Return Requests** ট্যাবে আসবে। বই হাতে পাওয়ার পর **"Confirm Return"** বাটনে চাপলেই লোন সমাপ্ত হবে এবং বইটির স্টক পুনরুদ্ধার হবে।
+4. পাঠক বই ফেরত দিতে চাইলে তা **Incoming Requests**-এর রিটার্ন সেকশনে আসবে। বই হাতে পাওয়ার পর **"Confirm Return Received"** বাটনে চাপলেই লোন সমাপ্ত হবে এবং বইটির স্টক পুনরুদ্ধার হবে।
 
 ### ৪. নতুন বই যুক্ত ও সম্পাদনা (Adding & Managing Books)
 1. **নতুন বই যোগ (`/add-book`)**: শিরোনাম, লেখক, ধরণ, কপির সংখ্যা এবং কভার ছবির লিঙ্ক দিয়ে বই আপলোড করুন।
@@ -167,7 +223,7 @@ stateDiagram-v2
 
 BookNook-এ **Sonner** লাইব্রেরির মাধ্যমে একটি সম্পূর্ণ ইন্টিগ্রেটেড গ্লোবাল টোস্ট সিস্টেম যুক্ত রয়েছে:
 
-- 🟢 **Success Toasts**: বই কার্টে যুক্ত করা, ধার রিকোয়েস্ট নিশ্চিত করা, নতুন বই যোগ করা, বই এডিট/ডিলিট, রিকোয়েস্ট অ্যাপ্রুভ এবং লগইন/রেজিস্ট্রেশন সাফল্য।
+- 🟢 **Success Toasts**: বই ব্যাগে যুক্ত করা, ধার রিকোয়েস্ট নিশ্চিত করা, নতুন বই যোগ করা, বই এডিট/ডিলিট, রিকোয়েস্ট অ্যাপ্রুভ এবং লগইন/রেজিস্ট্রেশন সাফল্য।
 - 🔴 **Error Toasts**: স্টক না থাকা, লগইন ছাড়া ধার করার চেষ্টা, অবৈধ ইনপুট ভ্যালিডেশন এবং এপিআই ব্যর্থতা।
 - 🟡 **Warning Toasts**: নিজের আপলোড করা বই নিজে ধার করার চেষ্টা করলে সতর্কবার্তা।
 - 🔵 **Info Toasts**: ব্যাগ থেকে বই বাদ দেওয়া বা ব্যাগ খালি করার নোটিফিকেশন।
@@ -180,25 +236,15 @@ BookNook-এ **Sonner** লাইব্রেরির মাধ্যমে এ
   - **ইমেইল ও পাসওয়ার্ড**: সর্বনিম্ন ৬ অক্ষর, কমপক্ষে একটি বড় হাতের ও একটি ছোট হাতের অক্ষরের কঠোর ভ্যালিডেশন।
   - **গুগল ও-অথ (Google OAuth 2.0)**: গুগল ক্লাউড কনসোলের মাধ্যমে এক ক্লিকে নিরাপদ সোশ্যাল সাইন-ইন।
 - **স্টেটলেস JWT ভেরিফিকেশন**: Better-Auth ফ্রন্টএন্ডে সেশন তৈরি করে এবং ব্যাকএন্ডের জন্য ক্রিপ্টোগ্রাফিকালি সাইন করা JWT টোকেন ইস্যু করে (`Authorization: Bearer <token>`)।
-- **নিরাপদ রাউট গার্ড (`ProtectedRoute`)**: অননুমোদিত ব্যবহারকারীদের স্বয়ংক্রিয়ভাবে রিডাইরেক্ট করে লগইন পেজে নিয়ে যায়।
+- **নিরাপদ রাউট গার্ড (`ProtectedRoute` + `src/middleware.ts`)**: অননুমোদিত ব্যবহারকারীদের স্বয়ংক্রিয়ভাবে রিডাইরেক্ট করে লগইন পেজে নিয়ে যায়।
 
 ---
 
 ## ⚙️ Environment Variables (Unified Setup)
 
-ফ্রন্টএন্ড এবং ব্যাকএন্ড উভয় রিপোজিটরিতে একই রকম ৪টি মূল এনভায়রনমেন্ট ভেরিয়েবল ব্যবহার করা হয়:
-
 ### ফ্রন্টএন্ড (`booknook_client/.env`)
 
 ```env
-# Production Environment Variables
-# API_URL=https://booksnook-backend.vercel.app
-# APP_URL=https://booknook-client-gamma-five.vercel.app
-# BETTER_AUTH_SECRET=A6aErmnfAplYP1ZxrLMyAPzbsRlzcbTr
-# MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.p16xpfx.mongodb.net/
-# GOOGLE_CLIENT_ID=your_google_client_id.apps.googleusercontent.com
-# GOOGLE_CLIENT_SECRET=your_google_client_secret
-
 # Development Environment Variables
 API_URL=http://localhost:8000
 APP_URL=http://localhost:3000
@@ -219,8 +265,6 @@ BETTER_AUTH_SECRET=A6aErmnfAplYP1ZxrLMyAPzbsRlzcbTr
 MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.p16xpfx.mongodb.net/
 DB_NAME=assignment-08
 ```
-
-> **নোট**: ব্যাকএন্ড স্বয়ংক্রিয়ভাবে `APP_URL` থেকে `ALLOWED_ORIGIN`, `TOKEN_ISSUER`, এবং `JWKS_URL` তৈরি করে নেয়। তাই অতিরিক্ত কোনো ভেরিয়েবল আলাদাভাবে লেখার প্রয়োজন হয় না।
 
 ---
 
@@ -270,14 +314,20 @@ booknook_client/
 ├── public/                    # স্ট্যাটিক অ্যাসেট ও সিড ডাটা
 ├── src/
 │   ├── app/                   # Next.js 16 App Router পেজ ও এপিআই
-│   │   ├── add-book/          # নতুন বই যুক্ত করার ফর্ম
+│   │   ├── add-book/          # নতুন বই যুক্ত করার ফর্ম (AddBookForm)
 │   │   ├── api/auth/          # BetterAuth হ্যান্ডলার
-│   │   ├── books/             # পাবলিক ক্যাটালগ ও বইয়ের বিস্তারিত পেজ [id]
-│   │   ├── login/             # ইমেইল ও গুগল ও-অথ লগইন পেজ
-│   │   ├── my-books/          # কনট্রিবিউটর ড্যাশবোর্ড ও লোন অ্যাপ্রুভাল
-│   │   ├── my-borrows/        # পাঠকের ধার তালিকা ও রিটার্ন ড্যাশবোর্ড
-│   │   ├── profile/           # ব্যবহারকারীর প্রোফাইল ও লোন সারাংশ
-│   │   ├── register/          # নতুন অ্যাকাউন্ট খোলার পেজ
+│   │   ├── books/             # পাবলিক ক্যাটালগ (BooksCatalog) ও বিস্তারিত পেজ [id]
+│   │   ├── login/             # ইমেইল ও গুগল ও-অথ লগইন পেজ (LoginForm)
+│   │   ├── my-books/          # কনট্রিবিউটর ড্যাশবোর্ড ও ৮টি মডুলার কম্পোনেন্ট
+│   │   │   ├── components/    # BookThumbnail, ContributorHeader, CatalogStats, etc.
+│   │   │   └── MyBooksClient.tsx
+│   │   ├── my-borrows/        # পাঠকের ধার তালিকা ও ৪টি মডুলার কম্পোনেন্ট
+│   │   │   ├── components/    # BorrowBookThumbnail, BorrowsHeader, BorrowsTable, etc.
+│   │   │   └── MyBorrowsClient.tsx
+│   │   ├── profile/           # প্রোফাইল সারাংশ ও ৫টি মডুলার কম্পোনেন্ট
+│   │   │   ├── components/    # ProfileHeader, ProfileStats, AccountDetails, etc.
+│   │   │   └── ProfileClient.tsx
+│   │   ├── register/          # নতুন অ্যাকাউন্ট খোলার পেজ (RegisterForm)
 │   │   ├── globals.css        # Tailwind v4 থিম ও কালার টোকেন
 │   │   └── layout.tsx         # গ্লোবাল লেআউট ও Sonner Toaster
 │   ├── components/            # রিইউজেবল রিঅ্যাক্ট কম্পোনেন্ট
@@ -286,12 +336,13 @@ booknook_client/
 │   │   ├── header/            # Navbar, CartSheet, SearchBar, UserMenu
 │   │   ├── home/              # Banner, LiterarySpotlight, ReadingPerks
 │   │   └── ui/                # shadcn base-nova ও Sonner কম্পোনেন্ট
-│   ├── lib/                   # Auth কনফিগারেশন, ইউটিলিটি ও ক্লায়েন্ট
+│   ├── lib/                   # Auth কনফিগারেশন, JWT ক্যাশ ও ক্লায়েন্ট
+│   ├── middleware.ts          # Server Edge Route Guard
 │   ├── providers/             # CartProvider ও গ্লোবাল স্টেট
-│   ├── services/              # ক্লিন এপিআই সার্ভিসেস (CRUD & Approval)
+│   ├── services/              # ডুয়াল-এনভায়রনমেন্ট এপিআই সার্ভিসেস (CRUD & Approval)
 │   └── types/                 # TypeScript টাইপ ও ইন্টারফেস
 ├── biome.json                 # Biome 2 কনফিগারেশন
-├── next.config.ts             # Next.js 16 কনফিগারেশন
+├── next.config.ts             # Next.js 16 কনফিগারেশন ও Reverse Proxy
 └── package.json
 ```
 

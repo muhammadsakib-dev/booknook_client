@@ -61,7 +61,7 @@ export function Footer() {
 
               {/* GitHub */}
               <a
-                href="https://github.com"
+                href="https://github.com/muhammadsakib-dev"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="BookNook GitHub Repository"
@@ -83,7 +83,7 @@ export function Footer() {
 
               {/* LinkedIn */}
               <a
-                href="https://linkedin.com"
+                href="https://www.linkedin.com/in/muhammadsakib-dev/"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="BookNook LinkedIn"
