@@ -1,13 +1,9 @@
-// OK
-
+// Ready
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { nextCookies } from "better-auth/next-js";
 import { jwt } from "better-auth/plugins";
 import { MongoClient } from "mongodb";
-import { demoResetTokens } from "./demo-tokens";
-
-export { demoResetTokens };
 
 const mongodbUri = process.env.MONGODB_URI as string;
 
@@ -67,10 +63,6 @@ export const auth = betterAuth({
     minPasswordLength: 6,
     requireUppercase: true,
     requireLowercase: true,
-    sendResetPassword: async ({ user, url, token }) => {
-      console.log(`[Password Reset] Link for ${user.email}: ${url}`);
-      demoResetTokens.set(user.email.toLowerCase(), token);
-    },
   },
   socialProviders: {
     google: {

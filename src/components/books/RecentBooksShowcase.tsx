@@ -1,4 +1,4 @@
-// Complete the RecentBooksShowcase component
+// Ready
 
 "use client";
 

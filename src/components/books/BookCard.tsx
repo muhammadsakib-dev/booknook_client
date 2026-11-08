@@ -1,4 +1,4 @@
-// Complete the BookCard component
+// Ready
 
 "use client";
 
@@ -103,7 +103,7 @@ export function BookCard({ book }: BookCardProps) {
         </p>
 
         {/* Description snippet */}
-        <p className="max-sm:hidden text-xs text-muted-foreground line-clamp-2 leading-relaxed mb-4 flex-1">
+        <p className=" text-xs text-muted-foreground line-clamp-2 leading-relaxed mb-4 flex-1">
           {item.description}
         </p>
 

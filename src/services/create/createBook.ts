@@ -1,4 +1,4 @@
-// Perfect
+// Ready
 
 import {
   API_BASE_URL,

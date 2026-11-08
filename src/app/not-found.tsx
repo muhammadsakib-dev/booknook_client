@@ -1,4 +1,4 @@
-// Complete 404 Not Found Page
+// Ready
 
 import { ArrowLeft, BookX, Home } from "lucide-react";
 import Link from "next/link";
@@ -11,7 +11,7 @@ export default function NotFound() {
       <div className="max-w-md w-full bg-card border border-border rounded-3xl p-8 sm:p-10 shadow-lg text-center flex flex-col items-center">
         {/* Icon */}
         <div className="w-16 h-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-6">
-          <BookX className="w-8 h-8 stroke-[2]" />
+          <BookX className="w-8 h-8 stroke-2" />
         </div>
 
         {/* 404 Badge */}
@@ -31,7 +31,7 @@ export default function NotFound() {
         </p>
 
         {/* Action button */}
-        <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
+        <div className="flex flex-col max-sm:flex-row items-center gap-3 w-full">
           <Link
             href="/"
             className={cn(

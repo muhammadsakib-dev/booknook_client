@@ -1,3 +1,4 @@
+// Ready
 import type { Book, NormalizedBook } from "@/types/book";
 
 /**

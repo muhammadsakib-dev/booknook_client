@@ -1,4 +1,4 @@
-// Complete the ProtectedRoute component
+// Ready
 
 "use client";
 

@@ -1,4 +1,4 @@
-// Completed
+// Ready
 
 import type { Metadata } from "next";
 import { Banner } from "@/components/banner";
